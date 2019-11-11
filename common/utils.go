@@ -1,6 +1,8 @@
 package common
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func CheckUser(r *http.Request) bool {
 	return true
@@ -9,3 +11,4 @@ func CheckUser(r *http.Request) bool {
 func Intro(from string) string {
 	return from[:1]
 }
+

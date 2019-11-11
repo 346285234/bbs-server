@@ -8,9 +8,10 @@
 
 ```json
 {
-  "statusCode": 200,
+  "success": true,
+  "code": 200,
   "message": "OK",
-  "results": 
+  "data": 
   {
     "total": 1,
     "topics": [
@@ -33,10 +34,16 @@
 
 ```json
 {
+  "success": true,
+  "code": 200,
+  "message": "OK",
+  "data": 
+  {
     "id": 1,
     "name": "x",
     "author": "x",
     "content": "x"
+  }
 }
 ```
 
@@ -50,9 +57,9 @@
 
 ```json
 {
-    "name": "x",
-    "author": "x",
-    "content": "x"
+  "name": "x",
+  "author": "x",
+  "content": "x"
 }
 ```
 
@@ -60,9 +67,10 @@
 
 ```json
 {
-  "statusCode": 200,
+  "success": true,
+  "code": 200,
   "message": "OK",
-  "results":
+  "data":
   {
     "id": 1
   }

@@ -3,8 +3,8 @@ package router
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/346285234/bbs/common"
-	"github.com/346285234/bbs/data"
+	"github.com/346285234/bbs-server/common"
+	"github.com/346285234/bbs-server/data"
 	"net/http"
 )
 
