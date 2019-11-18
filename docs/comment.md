@@ -1,8 +1,8 @@
-# Topic
+# Comment
 
-### List topics
+### Get comments
 
-* **URL:** /topic/list
+* **URL:** /topic/comments?topic_id=[id]
 * **method:** GET
 * **Response:**
 
@@ -14,21 +14,27 @@
   "data": 
   {
     "total": 1,
-    "topics": [
+    "comments": [
       {
         "id": 1,
-        "name": "x",
-        "author": "x",
-        "intro": "x",
-        "favourites": 1,
-        "likes": 1
+        "user_id": "x",
+        "user_name": "x",
+        "content": "x",
+        "subcomment": [
+          {
+            "id": 2,
+            "user_id": "x",
+            "user_name": "x",
+            "content": "x",
+          }
+        ],
       }
     ]
   }
 }
 ```
 
-### Get a topic
+### Get a comment
 
 * **URL:** /topic/[id]
 * **method:** GET
@@ -49,17 +55,16 @@
 }
 ```
 
-### Create a topic
+### Add comment
 
-* **URL:** /topic/create
+* **URL:** /topic/comment/add
 * **method:** POST
 * **body:**
 
 ```json
 {
-  "name": "x",
-  "author": "x",
-  "content": "x"
+  "topic_id": 1,
+  "content": "x",
 }
 ```
 
@@ -70,22 +75,23 @@
   "success": true,
   "code": 200,
   "message": "OK",
-  "data":
-  {
-    "id": 1
-  }
+  "data": {
+    "comment_id": 1,
+    "content": "x",
+    "modify_time": 11111,
+  },
 }
 ```
 
-### Delete a topic
+### Reply comment
 
-* **URL:** /topic/delete
+* **URL:** /topic/comment/reply
 * **method:** POST
 * **body:**
 
 ```json
 {
-  "name": "x",
+  "topic_id": "x",
   "author": "x",
   "content": "x"
 }
