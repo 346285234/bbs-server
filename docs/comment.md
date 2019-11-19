@@ -1,8 +1,8 @@
 # Comment
 
-### Get comments
+### List comments
 
-* **URL:** /topic/comments?topic_id=[id]
+* **URL:** /topic/[topic_id]/comments
 * **method:** GET
 * **Response:**
 
@@ -17,15 +17,19 @@
     "comments": [
       {
         "id": 1,
-        "user_id": "x",
-        "user_name": "x",
+        "author": "x",
+        "portrait": "x",
         "content": "x",
-        "subcomment": [
+        "modify_time": 1111,
+        "like_count": 1,
+        "subComment": [
           {
             "id": 2,
-            "user_id": "x",
-            "user_name": "x",
+            "author": "x",
+            "portrait": "x",
             "content": "x",
+            "modify_time": 1111,
+            "like_count": 1,
           }
         ],
       }
@@ -34,36 +38,15 @@
 }
 ```
 
-### Get a comment
+### Add a comment
 
-* **URL:** /topic/[id]
-* **method:** GET
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": 
-  {
-    "id": 1,
-    "name": "x",
-    "author": "x",
-    "content": "x"
-  }
-}
-```
-
-### Add comment
-
-* **URL:** /topic/comment/add
+* **URL:** /topic/[topic_id]/comment/add
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
 {
-  "topic_id": 1,
   "content": "x",
 }
 ```
@@ -76,23 +59,26 @@
   "code": 200,
   "message": "OK",
   "data": {
-    "comment_id": 1,
+    "id": 1,
+    "author": "x",
+    "portrait": "x",
     "content": "x",
-    "modify_time": 11111,
+    "modify_time": 1111,
+    "like_count": 0,
   },
 }
 ```
 
-### Reply comment
+### Reply a comment
 
-* **URL:** /topic/comment/reply
+* **URL:** /topic/[topic_id]/comment/reply
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
 {
-  "topic_id": "x",
-  "author": "x",
+  "id": 1,
   "content": "x"
 }
 ```
@@ -106,43 +92,21 @@
   "message": "OK",
   "data":
   {
-    "id": 1
+    "id": 1,
+    "author": "x",
+    "portrait": "x",
+    "content": "x",
+    "modify_time": 1111,
+    "like_count": 0,
   }
 }
 ```
 
-### Modify a topic
+### Mark comment like
 
-* **URL:** /topic/modify
+* **URL:** /topic/[topic_id]/comment/like/mark
 * **method:** POST
-* **body:**
-
-```json
-{
-  "name": "x",
-  "author": "x",
-  "content": "x"
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data":
-  {
-    "id": 1
-  }
-}
-```
-
-### add favourites
-
-* **URL:** /topic/favourites/add
-* **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
@@ -162,156 +126,16 @@
 }
 ```
 
-### remove favourites
+### Unmark comment like
 
-* **URL:** /topic/favourites/remove
+* **URL:** /topic/[topic_id]/comment/like/unmark
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
 {
   "id": 1,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-### list favourites
-
-* **URL:** /topic/favourites/list
-
-* **method:** GET
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {
-    "total": 1,
-    "users": [
-      {
-        "userID": 1,
-        "username": "cq",
-      }
-    ]
-  }
-}
-```
-
-### add like
-
-* **URL:** /topic/like/add
-* **method:** POST
-* **body:**
-
-```json
-{
-  "id": 1,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-### remove like
-
-* **URL:** /topic/like/remove
-* **method:** POST
-* **body:**
-
-```json
-{
-  "id": 1,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-### list like
-
-* **URL:** /topic/like/list
-
-* **method:** GET
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {
-    "total": 1,
-    "users": [
-      {
-        "userID": 1,
-        "username": "cq",
-      }
-    ]
-  }
-}
-```
-
-### list tag
-
-* **URL:** /topic/tag/list
-
-* **method:** GET
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {
-    "total": 1,
-    "tags": [
-      "name": "x",
-    ]
-  }
-}
-```
-
-### add like
-
-* **URL:** /topic/tag/add
-* **method:** POST
-* **body:**
-
-```json
-{
-  "name": "x",
 }
 ```
 

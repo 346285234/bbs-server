@@ -2,7 +2,7 @@
 
 ### List topics
 
-* **URL:** /topic/list
+* **URL:** /topics
 * **method:** GET
 * **Response:**
 
@@ -17,11 +17,16 @@
     "topics": [
       {
         "id": 1,
-        "name": "x",
+        "title": "x",
+        "tag": "x",
+        "category": "x",
         "author": "x",
-        "intro": "x",
-        "favourites": 1,
-        "likes": 1
+        "portrait": "x",
+        "description": "x",
+        "modify_time": 1111,
+        "favourites_count": 1,
+        "likes_count": 1,
+        "click_count": 1,
       }
     ]
   }
@@ -42,23 +47,33 @@
   "data": 
   {
     "id": 1,
-    "name": "x",
+    "title": "x",
+    "tag": "x",
+    "category": "x",
     "author": "x",
-    "content": "x"
+    "portrait": "x",
+    "description": "x",
+    "content": "x",
+    "modify_time": 1111,
+    "favourites_count": 1,
+    "likes_count": 1,
+    "click_count": 1,
   }
 }
 ```
 
-### Create a topic
+### Add a topic
 
-* **URL:** /topic/create
+* **URL:** /topic/add
 * **method:** POST
+* **head:** user info
 * **body:**
 
 ```json
 {
-  "name": "x",
-  "author": "x",
+  "title": "x",
+  "category": "x",
+  "tag": "x",
   "content": "x"
 }
 ```
@@ -72,22 +87,32 @@
   "message": "OK",
   "data":
   {
-    "id": 1
+    "id": 1,
+    "title": "x",
+    "tag": "x",
+    "category": "x",
+    "author": "x",
+    "portrait": "x",
+    "description": "x",
+    "content": "x",
+    "modify_time": 1111,
+    "favourites_count": 1,
+    "likes_count": 1,
+    "click_count": 1,
   }
 }
 ```
 
-### Delete a topic
+### Remove a topic
 
-* **URL:** /topic/delete
+* **URL:** /topic/remove
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
 {
-  "name": "x",
-  "author": "x",
-  "content": "x"
+  "id": 1,
 }
 ```
 
@@ -98,10 +123,7 @@
   "success": true,
   "code": 200,
   "message": "OK",
-  "data":
-  {
-    "id": 1
-  }
+  "data": {}
 }
 ```
 
@@ -109,12 +131,15 @@
 
 * **URL:** /topic/modify
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
 {
-  "name": "x",
-  "author": "x",
+  "id": 1,
+  "title": "x",
+  "tag": "x",
+  "category": "x",
   "content": "x"
 }
 ```
@@ -128,63 +153,27 @@
   "message": "OK",
   "data":
   {
-    "id": 1
+    "id": 1,
+    "title": "x",
+    "tag": "x",
+    "category": "x",
+    "author": "x",
+    "portrait": "x",
+    "description": "x",
+    "content": "x",
+    "modify_time": 1111,
+    "favourites_count": 1,
+    "likes_count": 1,
+    "click_count": 1,
   }
 }
 ```
 
-### add favourites
+### List user favourites topics
 
-* **URL:** /topic/favourites/add
-* **method:** POST
-* **body:**
-
-```json
-{
-  "id": 1,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-### remove favourites
-
-* **URL:** /topic/favourites/remove
-* **method:** POST
-* **body:**
-
-```json
-{
-  "id": 1,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-### list favourites
-
-* **URL:** /topic/favourites/list
-
+* **URL:** /user/favourites/list
 * **method:** GET
-
+* **header:** user info
 * **Response:**
 
 ```json
@@ -194,20 +183,30 @@
   "message": "OK",
   "data": {
     "total": 1,
-    "users": [
+    "topics": [
       {
-        "userID": 1,
-        "username": "cq",
+        "id": 1,
+        "title": "x",
+        "tag": "x",
+        "category": "x",
+        "author": "x",
+        "portrait": "x",
+        "description": "x",
+        "modify_time": 1111,
+        "favourites_count": 1,
+        "likes_count": 1,
+        "click_count": 1,
       }
     ]
   }
 }
 ```
 
-### add like
+### Mark favourites
 
-* **URL:** /topic/like/add
+* **URL:** /topic/favourites/mark
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
@@ -227,10 +226,11 @@
 }
 ```
 
-### remove like
+### Unmark favourites
 
-* **URL:** /topic/like/remove
+* **URL:** /topic/favourites/unmark
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
@@ -250,12 +250,11 @@
 }
 ```
 
-### list like
+### List user like topics
 
-* **URL:** /topic/like/list
-
+* **URL:** /user/like/list
 * **method:** GET
-
+* **header:** user info
 * **Response:**
 
 ```json
@@ -265,22 +264,78 @@
   "message": "OK",
   "data": {
     "total": 1,
-    "users": [
+    "topics": [
       {
-        "userID": 1,
-        "username": "cq",
+        "id": 1,
+        "title": "x",
+        "tag": "x",
+        "category": "x",
+        "author": "x",
+        "portrait": "x",
+        "description": "x",
+        "modify_time": 1111,
+        "favourites_count": 1,
+        "likes_count": 1,
+        "click_count": 1,
       }
     ]
   }
 }
 ```
 
-### list tag
+### Mark like
+
+* **URL:** /topic/like/mark
+* **method:** POST
+* **header:** user info
+* **body:**
+
+```json
+{
+  "id": 1,
+}
+```
+
+* **Response:**
+
+```json
+{
+  "success": true,
+  "code": 200,
+  "message": "OK",
+  "data": {}
+}
+```
+
+### Unmark like
+
+* **URL:** /topic/like/unmark
+* **method:** POST
+* **header:** user info
+* **body:**
+
+```json
+{
+  "id": 1,
+}
+```
+
+* **Response:**
+
+```json
+{
+  "success": true,
+  "code": 200,
+  "message": "OK",
+  "data": {}
+}
+```
+
+### List tag
 
 * **URL:** /topic/tag/list
-
 * **method:** GET
-
+* **header:** user info
 * **Response:**
 
 ```json
@@ -291,21 +346,22 @@
   "data": {
     "total": 1,
     "tags": [
-      "name": "x",
+      "value": "x",
     ]
   }
 }
 ```
 
-### add like
+### Add a tag
 
 * **URL:** /topic/tag/add
 * **method:** POST
+* **header:** user info
 * **body:**
 
 ```json
 {
-  "name": "x",
+  "value": "x",
 }
 ```
 
@@ -317,5 +373,25 @@
   "code": 200,
   "message": "OK",
   "data": {}
+}
+```
+
+### List category
+
+* **URL:** /topic/category/list
+* **method:** GET
+* **Response:**
+
+```json
+{
+  "success": true,
+  "code": 200,
+  "message": "OK",
+  "data": {
+    "total": 1,
+    "category": [
+      "value": "x",
+    ]
+  }
 }
 ```
