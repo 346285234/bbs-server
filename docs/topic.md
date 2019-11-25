@@ -1,5 +1,7 @@
 # Topic
 
+Missing page.
+
 ### List topics
 
 * **URL:** /topics
@@ -19,10 +21,13 @@
         "id": 1,
         "title": "x",
         "tag": "x",
-        "category": "x",
-        "author": "x",
+        "category_id": 1,
+        "category_name": "x",
+        "author_id": 1,
+        "author_name": "x",
         "portrait": "x",
         "description": "x",
+        "image_url": "x",
         "modify_time": 1111,
         "favourites_count": 1,
         "likes_count": 1,
@@ -49,8 +54,10 @@
     "id": 1,
     "title": "x",
     "tag": "x",
-    "category": "x",
-    "author": "x",
+    "category_id": 1,
+    "category_name": "x",
+    "author_id": 1,
+    "author_name": "x",
     "portrait": "x",
     "description": "x",
     "content": "x",
@@ -72,9 +79,14 @@
 ```json
 {
   "title": "x",
-  "category": "x",
+  "category_id": 1,
+  "category_name": "x",
   "tag": "x",
-  "content": "x"
+  "content": "x",
+  "edit_time":1111,
+  "is_paste":true,
+  "edit_type":1,
+  
 }
 ```
 
@@ -90,8 +102,10 @@
     "id": 1,
     "title": "x",
     "tag": "x",
-    "category": "x",
-    "author": "x",
+    "category_id": 1,
+    "category_name": "x",
+    "author_id": 1,
+    "author_name": "x",
     "portrait": "x",
     "description": "x",
     "content": "x",
@@ -139,8 +153,11 @@
   "id": 1,
   "title": "x",
   "tag": "x",
-  "category": "x",
-  "content": "x"
+  "category_id": 1,
+  "category_name": "x",
+  "content": "x",
+  "edit_time":"x",
+  "is_paste":true,
 }
 ```
 
@@ -156,8 +173,10 @@
     "id": 1,
     "title": "x",
     "tag": "x",
-    "category": "x",
-    "author": "x",
+    "category_id":1,
+    "category_name":"x",
+    "author_id": 1,
+    "author_name": "x",
     "portrait": "x",
     "description": "x",
     "content": "x",
@@ -169,40 +188,7 @@
 }
 ```
 
-### List user favourites topics
-
-* **URL:** /user/favourites/list
-* **method:** GET
-* **header:** user info
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {
-    "total": 1,
-    "topics": [
-      {
-        "id": 1,
-        "title": "x",
-        "tag": "x",
-        "category": "x",
-        "author": "x",
-        "portrait": "x",
-        "description": "x",
-        "modify_time": 1111,
-        "favourites_count": 1,
-        "likes_count": 1,
-        "click_count": 1,
-      }
-    ]
-  }
-}
-```
-
-### Mark favourites
+### Mark&unmark favourites
 
 * **URL:** /topic/favourites/mark
 * **method:** POST
@@ -212,6 +198,7 @@
 ```json
 {
   "id": 1,
+  "type": true,
 }
 ```
 
@@ -226,64 +213,7 @@
 }
 ```
 
-### Unmark favourites
-
-* **URL:** /topic/favourites/unmark
-* **method:** POST
-* **header:** user info
-* **body:**
-
-```json
-{
-  "id": 1,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-### List user like topics
-
-* **URL:** /user/like/list
-* **method:** GET
-* **header:** user info
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {
-    "total": 1,
-    "topics": [
-      {
-        "id": 1,
-        "title": "x",
-        "tag": "x",
-        "category": "x",
-        "author": "x",
-        "portrait": "x",
-        "description": "x",
-        "modify_time": 1111,
-        "favourites_count": 1,
-        "likes_count": 1,
-        "click_count": 1,
-      }
-    ]
-  }
-}
-```
-
-### Mark like
+### Mark&unmark like
 
 * **URL:** /topic/like/mark
 * **method:** POST
@@ -293,6 +223,7 @@
 ```json
 {
   "id": 1,
+  "type": true,
 }
 ```
 
@@ -307,29 +238,6 @@
 }
 ```
 
-### Unmark like
-
-* **URL:** /topic/like/unmark
-* **method:** POST
-* **header:** user info
-* **body:**
-
-```json
-{
-  "id": 1,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
 
 ### List tag
 
@@ -352,30 +260,6 @@
 }
 ```
 
-### Add a tag
-
-* **URL:** /topic/tag/add
-* **method:** POST
-* **header:** user info
-* **body:**
-
-```json
-{
-  "value": "x",
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
 ### List category
 
 * **URL:** /topic/category/list
@@ -390,7 +274,8 @@
   "data": {
     "total": 1,
     "category": [
-      "value": "x",
+      "id":1,
+      "name": "x",
     ]
   }
 }
