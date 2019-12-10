@@ -1,7 +1,7 @@
 package main
 
 import (
-	router "github.com/346285234/bbs-server/router"
+	"github.com/346285234/bbs-server/router"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"time"
@@ -19,11 +19,11 @@ func main() {
 
 	r := httprouter.New()
 
-	// Get
-	r.GET("/topics", router.Rt.ListTopics)
-	r.GET("/topic/:id", GetTopic)
+	// Topic
+	r.GET("/topics", router.Tr.ListTopics)
+	r.GET("/topic/:id", router.Tr.GetTopic)
 
-	// Set
+	// Comment
 	//mux.HandleFunc("/topic/create", router.ListTopics)
 	//mux.HandleFunc("/topic/delete", router.ListTopics)
 
