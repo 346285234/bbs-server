@@ -10,7 +10,7 @@ type TopicService struct {
 
 var Ts = TopicService{}
 
-func (_ *TopicService) Topics() (topics *[]data.Topic, err error) {
+func (_ *TopicService) Topics() (topics []data.Topic, err error) {
 	return operations.To.Topics()
 }
 

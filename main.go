@@ -16,18 +16,6 @@ func init() {
 func main() {
 
 	//logger := log.New(os.Stdout, "bbs", log.LstdFlags | log.Lshortfile)
-
-	r := httprouter.New()
-
-	// Topic
-	r.GET("/topics", router.Tr.ListTopics)
-	r.GET("/topic/:id", router.Tr.GetTopic)
-
-	// Comment
-	//mux.HandleFunc("/topic/create", router.ListTopics)
-	//mux.HandleFunc("/topic/delete", router.ListTopics)
-
-
 	//tlsConfig := &tls.Config{
 	//	// Causes servers to use Go's default ciphersuite preferences,
 	//	// which are tuned to avoid attacks. Does nothing on clients.
@@ -52,6 +40,13 @@ func main() {
 	//		// tls.TLS_RSA_WITH_AES_128_GCM_SHA256,
 	//	},
 	//}
+
+	// router.
+	r := httprouter.New()
+	r.GET("/topics", router.Tr.ListTopics)
+	r.GET("/topic/:id", router.Tr.GetTopic)
+	//mux.HandleFunc("/topic/create", router.ListTopics)
+	//mux.HandleFunc("/topic/delete", router.ListTopics)
 
 	server := &http.Server{
 		Addr:			config.Address,

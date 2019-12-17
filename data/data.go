@@ -13,4 +13,11 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	models := []interface{}{&Topic{}, &TopicFavorite{}, &TopicLike{},
+		&Category{}, &Comment{}, &CommentLike{}}
+
+	for _, v := range models {
+		Db.AutoMigrate(v)
+	}
 }

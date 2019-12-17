@@ -2,8 +2,6 @@ package router
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/346285234/bbs-server/common"
 	"github.com/346285234/bbs-server/data"
 	"github.com/346285234/bbs-server/data/services"
 	"github.com/julienschmidt/httprouter"
@@ -45,7 +43,7 @@ func (_ *TopicRouter)ListTopics(w http.ResponseWriter, r *http.Request, p httpro
 		data := struct {
 			Total int `json:"total"`
 			Topics []data.Topic `json:"topics"`
-		}{len(*topics), *topics}
+		}{len(topics), topics}
 		response.Data = data
 	}
 
@@ -54,10 +52,10 @@ func (_ *TopicRouter)ListTopics(w http.ResponseWriter, r *http.Request, p httpro
 }
 
 func (_ *TopicRouter)GetTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	var id uint = 1 // p.ByName("id").(uint)
+	//var id uint = 1 // p.ByName("id").(uint)
 
 	// query data
-	topics, err := services.Ts.GetTopic(id)
+	//topics, err := services.Ts.GetTopic(id)
 
 	// return response
 	//var response Response
