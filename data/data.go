@@ -5,11 +5,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var Db *gorm.DB
+var db *gorm.DB
 
 func init() {
 	var err error
-	Db, err = gorm.Open("mysql", "root:346285234@/bbs")
+	db, err = gorm.Open("mysql", "root:346285234@/bbs")
 	if err != nil {
 		panic(err)
 	}
@@ -18,6 +18,6 @@ func init() {
 		&Category{}, &Comment{}, &CommentLike{}}
 
 	for _, v := range models {
-		Db.AutoMigrate(v)
+		db.AutoMigrate(v)
 	}
 }
