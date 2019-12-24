@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"github.com/346285234/bbs-server/common"
 	"github.com/346285234/bbs-server/data"
 	"github.com/julienschmidt/httprouter"
 	"log"
@@ -75,9 +76,12 @@ func (_ *TopicRouter)GetTopic(w http.ResponseWriter, r *http.Request, p httprout
 }
 
 
-func CreateTopic(writer http.ResponseWriter, request *http.Request) {
+func (_ *TopicRouter)CreateTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	var topic data.Topic
-	json.NewDecoder(request.Body).Decode(&topic)
-	defer request.Body.Close()
+	json.NewDecoder(r.Body).Decode(&topic)
+	defer r.Body.Close()
+	userID := r.Header.Get("userID")
+	topic.AuthorID = uint(common.StrToInt(userID))
+
 	data.Ts.AddTopic(topic)
 }

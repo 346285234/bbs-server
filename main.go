@@ -45,8 +45,7 @@ func main() {
 	r := httprouter.New()
 	r.GET("/topics", router.Tr.ListTopics)
 	r.GET("/topic/:id", router.Tr.GetTopic)
-	//mux.HandleFunc("/topic/create", router.ListTopics)
-	//mux.HandleFunc("/topic/delete", router.ListTopics)
+	r.POST("/topic/add", check(router.Tr.CreateTopic))
 
 	server := &http.Server{
 		Addr:			config.Address,
@@ -60,11 +59,17 @@ func main() {
 }
 
 func check(fn func (w http.ResponseWriter,
-	r *http.Request,
-	p httprouter.Params)) func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		r *http.Request,
+		p httprouter.Params)) func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+			if !checkUser() {
+				return
+			}
+			fn(w, r, p)
+		}
+}
 
-		fn(w, r, p)
-
-	}
+func checkUser() bool {
+	// TODO: Check user info from header
+	return true
 }

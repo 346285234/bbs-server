@@ -7,6 +7,6 @@ func TestCreateTable(t *testing.T) {
 		&Category{}, &Comment{}, &CommentLike{}}
 
 	for _, v := range models {
-		Db.CreateTable(v)
+		db.CreateTable(v)
 	}
 }

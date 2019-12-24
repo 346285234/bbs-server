@@ -6,13 +6,12 @@ import (
 
 type Topic struct {
 	gorm.Model
-	AuthorID uint
-	title string
-	Intro string
-	Content string
+	AuthorID uint `json:"userID"`
+	Title string `json:"title"`
+	Content string `json:"content"`
 
+	Intro string `json:"intro"`
 	Comments []Comment
-
 	Tags []*Tag `gorm:"many2many:topic_tags;"`
 	CategoryID uint
 	FavoriteCount uint
