@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/346285234/bbs-server/router"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -36,6 +37,8 @@ func TestListTopic(t *testing.T) {
 		t.Errorf("Response code is %v", writer.Code)
 	}
 
+	fmt.Println(writer.Body)
+
 }
 
 func TestGetTopic(t *testing.T) {
@@ -46,6 +49,7 @@ func TestGetTopic(t *testing.T) {
 		t.Errorf("Response code is %v", writer.Code)
 	}
 
+	fmt.Println(writer.Body)
 }
 
 func TestCreateTopic(t *testing.T) {
@@ -67,4 +71,5 @@ func TestCreateTopic(t *testing.T) {
 		t.Errorf("Response code is %v", writer.Code)
 	}
 
+	fmt.Println(writer.Body)
 }

@@ -6,9 +6,9 @@ import (
 
 type Topic struct {
 	gorm.Model
-	AuthorID uint `json:"userID"`
-	Title string `json:"title"`
-	Content string `json:"content"`
+	AuthorID uint `gorm:"column:author_id" json:"userID"`
+	Title string `gorm:"column:title" json:"title"`
+	Content string `gorm:"column:content" json:"content"`
 
 	Intro string `json:"intro"`
 	Comments []Comment

@@ -7,7 +7,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 type Response struct {
@@ -37,7 +36,6 @@ func (_ *TopicRouter)ListTopics(w http.ResponseWriter, r *http.Request, p httpro
 	var response Response
 	if err != nil {
 		response = Response{Success: false, Code: 500, Message: "Failed"}
-		w.WriteHeader(500)
 		http.Error(w, err.Error(), 500)
 	} else {
 		response = Response{Success: true, Code: 200, Message: "OK"}
@@ -54,17 +52,12 @@ func (_ *TopicRouter)ListTopics(w http.ResponseWriter, r *http.Request, p httpro
 
 func (_ *TopicRouter)GetTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
-	id, err := strconv.Atoi(p.ByName("id"))
-	if err != nil {
-		return
-	}
-
+	id := common.StrToInt(p.ByName("id"))
 	topic, err := data.Ts.GetTopic(uint(id))
 
 	var response Response
 	if err != nil {
 		response = Response{Success: false, Code: 500, Message: "Failed"}
-		w.WriteHeader(500)
 		http.Error(w, err.Error(), 500)
 	} else {
 		response = Response{Success: true, Code: 200, Message: "OK"}
@@ -83,5 +76,17 @@ func (_ *TopicRouter)CreateTopic(w http.ResponseWriter, r *http.Request, p httpr
 	userID := r.Header.Get("userID")
 	topic.AuthorID = uint(common.StrToInt(userID))
 
-	data.Ts.AddTopic(topic)
+	err := data.Ts.AddTopic(topic)
+
+	var response Response
+	if err != nil {
+		response = Response{Success: false, Code: 500, Message: "Failed"}
+		http.Error(w, err.Error(), 500)
+	} else {
+		response = Response{Success: true, Code: 200, Message: "OK"}
+	}
+
+	bytes, _ := json.Marshal(response)
+	w.Write(bytes)
+
 }

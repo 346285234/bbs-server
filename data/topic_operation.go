@@ -1,5 +1,7 @@
 package data
 
+import "fmt"
+
 type TopicOperation struct {
 }
 
@@ -11,6 +13,10 @@ func (_ *TopicOperation) topics() (topics []Topic, err error) {
 }
 
 func (_ *TopicOperation) get(id uint) (topic Topic, err error) {
+	var temp Topic
+	db.First(&temp, id)
+	fmt.Println(temp)
+
 	db.First(&topic, id)
 	return topic, nil
 }
