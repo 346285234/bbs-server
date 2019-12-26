@@ -1,6 +1,8 @@
 # Topic
 
+TODO:
 Missing page.
+
 
 ### List topics
 
@@ -153,9 +155,9 @@ Missing page.
 }
 ```
 
-### Modify a topic
+### Update a topic
 
-* **URL:** /topic/modify
+* **URL:** /topic/update
 * **method:** POST
 * **header:** user info
 * **body:**
@@ -253,7 +255,7 @@ Missing page.
 
 ### List tag
 
-* **URL:** /topic/tag/list
+* **URL:** /topic/tags
 * **method:** GET
 * **header:** user info
 * **Response:**
@@ -274,7 +276,7 @@ Missing page.
 
 ### List category
 
-* **URL:** /topic/category/list
+* **URL:** /topic/categories
 * **method:** GET
 * **Response:**
 

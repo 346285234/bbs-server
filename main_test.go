@@ -23,7 +23,7 @@ func TestMain(m *testing.M)  {
 
 func setup() {
 	r = httprouter.New()
-	r.GET("/topics", router.Tr.ListTopics)
+	r.GET("/topics", router.Tr.ListTopic)
 	r.GET("/topic/:id", router.Tr.GetTopic)
 	r.POST("/topic/add", check(router.Tr.CreateTopic))
 	writer = httptest.NewRecorder()

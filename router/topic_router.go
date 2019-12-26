@@ -26,7 +26,7 @@ var Tr = TopicRouter{}
 func (_ *TopicRouter)SetupRouter(mux http.ServeMux) {
 }
 
-func (_ *TopicRouter)ListTopics(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (_ *TopicRouter)ListTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// TODO: analyse request
 
 	// query data

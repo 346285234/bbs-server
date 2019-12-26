@@ -43,9 +43,17 @@ func main() {
 
 	// router.
 	r := httprouter.New()
-	r.GET("/topics", router.Tr.ListTopics)
+	r.GET("/topics", router.Tr.ListTopic)
 	r.GET("/topic/:id", router.Tr.GetTopic)
 	r.POST("/topic/add", check(router.Tr.CreateTopic))
+	r.POST("topic/remove", check(router.Tr.RemoveTopic))
+	r.POST("topic/update", check(router.Tr.UpdateTopic))
+
+	r.POST("topic/favourites/mark", check(router.Tr.MarkFavourites))
+	r.POST("topic/like/mark", check(router.Tr.MarkLike))
+	r.GET("topic/tags", check(router.Tr.ListTag))
+	r.GET("topic/categories", router.Tr.ListCategory)
+
 
 	server := &http.Server{
 		Addr:			config.Address,
