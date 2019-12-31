@@ -22,10 +22,7 @@ func TestMain(m *testing.M)  {
 }
 
 func setup() {
-	r = httprouter.New()
-	r.GET("/topics", router.Tr.ListTopic)
-	r.GET("/topic/:id", router.Tr.GetTopic)
-	r.POST("/topic/add", check(router.Tr.CreateTopic))
+	r = router.NewRouter()
 	writer = httptest.NewRecorder()
 }
 
@@ -52,17 +49,18 @@ func TestGetTopic(t *testing.T) {
 	fmt.Println(writer.Body)
 }
 
-func TestCreateTopic(t *testing.T) {
-	type CreateTopic struct {
+func TestAddTopic(t *testing.T) {
+	buf := new(bytes.Buffer)
+	type Body struct {
 		Title string `json:"title""`
 		Content string `json:"content"`
 	}
-	ct := &CreateTopic{
+	body := &Body{
 		Title:   "first",
 		Content: "hello world",
 	}
-	buf := new(bytes.Buffer)
-	json.NewEncoder(buf).Encode(&ct)
+	json.NewEncoder(buf).Encode(&body)
+
 	request, _ := http.NewRequest("POST", "/topic/add", buf)
 	request.Header.Add("userID", "1")
 	r.ServeHTTP(writer, request)
@@ -70,6 +68,44 @@ func TestCreateTopic(t *testing.T) {
 	if writer.Code != 200 {
 		t.Errorf("Response code is %v", writer.Code)
 	}
+	fmt.Println(writer.Body)
+}
 
+func TestRemoveTopic(t *testing.T) {
+	buf := new(bytes.Buffer)
+	body := map[string]int{"id":1}
+	json.NewEncoder(buf).Encode(&body)
+	request, _ := http.NewRequest("POST", "/topic/remove", buf)
+
+	request.Header.Add("userID", "1")
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+	fmt.Println(writer.Body)
+}
+
+func TestUpdateTopic(t *testing.T) {
+	buf := new(bytes.Buffer)
+	type Body struct {
+		ID int `json:"id"`
+		Title string `json:"title""`
+		Content string `json:"content"`
+	}
+	body := &Body{
+		ID: 1,
+		Title:   "first",
+		Content: "update content",
+	}
+	json.NewEncoder(buf).Encode(&body)
+
+	request, _ := http.NewRequest("POST", "/topic/update", buf)
+	request.Header.Add("userID", "1")
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
 	fmt.Println(writer.Body)
 }

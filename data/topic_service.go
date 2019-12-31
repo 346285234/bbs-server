@@ -16,3 +16,7 @@ func (_ *TopicService) GetTopic(id uint) (topic Topic, err error) {
 func (_ *TopicService) AddTopic(topic Topic) (err error) {
 	return to.add(topic)
 }
+
+func (_ *TopicService) RemoveTopic(userID uint, topicID uint) (err error) {
+	return to.remove(userID, topicID)
+}

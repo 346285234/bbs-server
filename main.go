@@ -23,4 +23,5 @@ func main() {
 		TLSConfig: nil,
 	}
 	server.ListenAndServeTLS("cert.pem", "key.pem")
+	http.Handle()
 }

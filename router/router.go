@@ -1,6 +1,21 @@
 package router
 
-import mux "github.com/julienschmidt/httprouter"
+import (
+	mux "github.com/julienschmidt/httprouter"
+	"net/http"
+)
+
+type appError struct {
+	Error error
+	Message string
+	Code int
+}
+
+type appHandler func(http.ResponseWriter, *http.Request, mux.Params) *appError
+func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request, p mux.Params) {
+	if err := fn(w, r, p); err != nil {
+	}
+}
 
 type Route struct {
 	Method string
@@ -11,51 +26,51 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
+	//Route{
+	//	Method:  "GET",
+	//	Path:    "/topics",
+	//	Handler: appHandler(tr.listTopic),
+	//},
 	Route{
 		Method:  "GET",
-		Path:    "topics",
-		Handler: tr.listTopic,
+		Path:    "/topic/:id",
+		Handler: appHandler(tr.getTopic),
 	},
-	Route{
-		Method:  "GET",
-		Path:    "topic/:id",
-		Handler: Tr.GetTopic,
-	},
-	Route{
-		Method:  "POST",
-		Path:    "topic/add",
-		Handler: Tr.CreateTopic,
-	},
-	Route{
-		Method:  "POST",
-		Path:    "topic/remove",
-		Handler: Tr.RemoveTopic,
-	},
-	Route{
-		Method:  "POST",
-		Path:    "topic/update",
-		Handler: Tr.UpdateTopic,
-	},
-	Route{
-		Method:  "POST",
-		Path:    "topic/favourites/mark",
-		Handler: Tr.MarkFavourites,
-	},
-	Route{
-		Method:  "POST",
-		Path:    "topic/like/mark",
-		Handler: Tr.markLike,
-	},
-	Route{
-		Method:  "GET",
-		Path:    "topic/tags",
-		Handler: Tr.listTag,
-	},
-	Route{
-		Method:  "GET",
-		Path:    "topic/categories",
-		Handler: Tr.listCategory,
-	},
+	//Route{
+	//	Method:  "POST",
+	//	Path:    "/topic/add",
+	//	Handler: tr.addTopic,
+	//},
+	//Route{
+	//	Method:  "POST",
+	//	Path:    "/topic/remove",
+	//	Handler: tr.removeTopic,
+	//},
+	//Route{
+	//	Method:  "POST",
+	//	Path:    "/topic/update",
+	//	Handler: tr.updateTopic,
+	//},
+	//Route{
+	//	Method:  "POST",
+	//	Path:    "topic/favourites/mark",
+	//	Handler: Tr.MarkFavourites,
+	//},
+	//Route{
+	//	Method:  "POST",
+	//	Path:    "topic/like/mark",
+	//	Handler: Tr.markLike,
+	//},
+	//Route{
+	//	Method:  "GET",
+	//	Path:    "topic/tags",
+	//	Handler: Tr.listTag,
+	//},
+	//Route{
+	//	Method:  "GET",
+	//	Path:    "topic/categories",
+	//	Handler: Tr.listCategory,
+	//},
 }
 
 func NewRouter() *mux.Router {
@@ -67,18 +82,18 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-func check(fn func (w http.ResponseWriter,
-	r *http.Request,
-	p httprouter.Params)) func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		if !checkUser() {
-			return
-		}
-		fn(w, r, p)
-	}
-}
-
-func checkUser() bool {
-	// TODO: Check user info from header
-	return true
-}
+//func check(fn func (w http.ResponseWriter,
+//	r *http.Request,
+//	p httprouter.Params)) func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+//	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+//		if !checkUser() {
+//			return
+//		}
+//		fn(w, r, p)
+//	}
+//}
+//
+//func checkUser() bool {
+//	// TODO: Check user info from header
+//	return true
+//}

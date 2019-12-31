@@ -25,3 +25,13 @@ func (_ *TopicOperation) add(topic Topic) (err error) {
 	db.Create(&topic)
 	return nil
 }
+
+func (_ *TopicOperation) remove(userID uint, topicID uint) (err error) {
+	db.Where("author_id = ? AND id = ?", userID, topicID).Delete(&Topic{})
+	return nil
+}
+
+func (_ *TopicOperation) update() (err error) {
+	db.Where("author_id = ? AND id = ?", userID, topicID).Delete(&Topic{})
+	return nil
+}
