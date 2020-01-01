@@ -7,17 +7,24 @@ user info: ["userID": 1, ]
 
 ### List topics
 
-* **URL:** /topics
+* **URL:** /topics?hot=true&group_id=1
 
 * **method:** GET
 
 * **query:** 
 
-  |      |      |      |
-  | ---- | ---- | ---- |
-  |      |      |      |
-  |      |      |      |
-  |      |      |      |
+  | key          | value |
+  | ------------ | ----- |
+  | hot          | true  |
+  | group_id     | 1     |
+  | distance     | 1000  |
+  | user_id      | 1     |
+  | category_id  | 1     |
+  | tag          | "x"   |
+  | page_size    | 1000  |
+  | page         | 1     |
+  | key_word     | "x"   |
+  | last_post_id | 1     |
 
   
 
@@ -100,7 +107,8 @@ user info: ["userID": 1, ]
   "content": "x",
   "edit_time":1111,
   "is_paste":true,
-  "edit_type":1,
+  "edit_type":1, // markdown or...
+  "group_id": 1,
   
 }
 ```
