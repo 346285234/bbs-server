@@ -1,31 +1,46 @@
 # BBS db description
 
-## User
-
-* id: int
-* name: string
-* portrait: string
-* favourites: [int]
-* like: [int]
-
 
 
 ## Topic
 
 * id: int
-
 * title: string
 * tag: string
-* category: string
+* category_id: string
 * user_id: int
-* modify_time: int
+* group_id: int
+* is_paste: true
+* edit_time: int,
+* edit_type: int, // markdown or...
 * description: string
 * content: string
 * favourites_count: int
 * like_count: int
 * click_count: int 
+* create_time: int
+* modify_time: int
 
 
+
+## Favourites
+
+* id: int
+* topic_id: int
+* user_id: int
+* create_time: int
+* modify_time: int
+
+## Like
+
+* id: int
+* topic_id: int
+* type: int
+* user_id: int
+
+- create_time: int
+- modify_time: int
+- 
 
 ## Comment
 
@@ -33,10 +48,10 @@
 * user_id: int
 * topic_id: int
 * content: string
-* modify_time: int
 * like_count: int
 * parent_id: int
-* sub_id: [int]
+* create_time: int
+* modify_time: int
 
 
 
@@ -48,4 +63,5 @@
 
 ## Category
 
+* id: int
 * value: string

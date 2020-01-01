@@ -38,6 +38,8 @@ user info: ["userID": 1, ]
   "data": 
   {
     "total": 1,
+    "page": 1,
+    "page_size": 1000,
     "topics": [
       {
         "id": 1,
@@ -105,7 +107,7 @@ user info: ["userID": 1, ]
   "category_name": "x",
   "tag": "x",
   "content": "x",
-  "edit_time":1111,
+  "edit_time":1111, // edit use how many time
   "is_paste":true,
   "edit_type":1, // markdown or...
   "group_id": 1,
