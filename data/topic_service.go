@@ -9,7 +9,7 @@ func (_ *TopicService) Topics() (topics []Topic, err error) {
 	return to.topics()
 }
 
-func (_ *TopicService) GetTopic(id uint) (topic Topic, err error) {
+func (_ *TopicService) GetTopic(id uint) (topic *Topic, err error) {
 	return to.get(id)
 }
 

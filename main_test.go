@@ -73,7 +73,7 @@ func TestAddTopic(t *testing.T) {
 
 func TestRemoveTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
-	body := map[string]int{"id":1}
+	body := map[string]int{"id":2}
 	json.NewEncoder(buf).Encode(&body)
 	request, _ := http.NewRequest("POST", "/topic/remove", buf)
 
