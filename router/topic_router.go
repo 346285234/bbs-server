@@ -78,13 +78,14 @@ func (_ *TopicRouter)getTopic(w http.ResponseWriter, r *http.Request, p httprout
 
 func (_ *TopicRouter)addTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) *appError {
 	// Analyse response.
+
 	var topic data.Topic
 	json.NewDecoder(r.Body).Decode(&topic)
 	defer r.Body.Close()
 	userID := r.Header.Get("userID")
-	topic.AuthorID = uint(common.StrToInt(userID))
+	topic.UserID = uint(common.StrToInt(userID))
 
-	// Add data.
+	//Add data.
 	err := data.Ts.AddTopic(topic)
 
 	if err != nil {
@@ -141,7 +142,7 @@ func (_ *TopicRouter)updateTopic(w http.ResponseWriter, r *http.Request, p httpr
 	json.NewDecoder(r.Body).Decode(&topic)
 	defer r.Body.Close()
 	userID := r.Header.Get("userID")
-	topic.AuthorID = uint(common.StrToInt(userID))
+	topic.UserID = uint(common.StrToInt(userID))
 
 	err := data.Ts.AddTopic(topic)
 	if err != nil {

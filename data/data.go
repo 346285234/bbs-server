@@ -15,7 +15,7 @@ func init() {
 	}
 
 	models := []interface{}{&Topic{}, &TopicFavorite{}, &TopicLike{},
-		&Category{}, &Comment{}, &CommentLike{}}
+		&TopicCategory{}, &Comment{}, &CommentLike{}}
 
 	for _, v := range models {
 		db.AutoMigrate(v)

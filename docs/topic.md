@@ -103,10 +103,9 @@ user info: ["userID": 1, ]
 ```json
 {
   "title": "x",
-  "category_id": 1,
-  "category_name": "x",
-  "tag": "x",
   "content": "x",
+  "category_id": 1,
+  "tags": ["a", "b"],
   "edit_time":1111, // edit use how many time
   "is_paste":true,
   "edit_type":1, // markdown or...

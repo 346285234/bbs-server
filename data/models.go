@@ -2,19 +2,29 @@ package data
 
 import (
 	"github.com/jinzhu/gorm"
+	"time"
+)
+
+type EditType int
+const (
+	Markdown EditType = 1
 )
 
 type Topic struct {
 	gorm.Model
-	AuthorID uint `gorm:"column:author_id" json:"userID"`
-	Title string `gorm:"column:title" json:"title"`
-	Content string `gorm:"column:content" json:"content"`
-
-	Intro string `json:"intro"`
-	Comments []Comment
-	Tags []*Tag `gorm:"many2many:topic_tags;"`
-	CategoryID uint
-	FavoriteCount uint
+	UserID uint
+	Title string
+	Content string
+	Intro string
+	GroupID uint `json:"group_id"`
+	IsPaste bool `json:"is_paste"`
+	EditTime time.Duration `json:"edit_time"`
+	EditTypeValue int `json:"edit_type"`
+	Comments []Comment // has many
+	Tags []TopicTag `gorm:"many2many:topic_tags;"` // many to many
+	Category TopicCategory // belong to
+	CategoryID uint `json:"category_id"`
+	FavouritesCount uint
 	LikeCount uint
 	ClickCount uint
 }
@@ -31,14 +41,14 @@ type TopicLike struct {
 	UserID uint
 }
 
-type Tag struct {
+type TopicTag struct {
 	gorm.Model
 	UserID uint
 	Value string
-	Topics []*Topic `gorm:"many2many:topic_tags;"`
+	Topics []Topic `gorm:"many2many:topic_tags;"`
 }
 
-type Category struct {
+type TopicCategory struct {
 	gorm.Model
 	Value string
 	topics []Topic
@@ -47,11 +57,11 @@ type Category struct {
 type Comment struct {
 	gorm.Model
 	AuthorID uint
-	TopicID uint
 	Content string
 	LikeCount uint
-	Children []Comment `gorm:"foreignkey:Parent"`
+	Children []Comment `gorm:"foreignkey:Parent"` // has many
 	Parent uint
+	TopicID uint
 }
 
 type CommentLike struct {

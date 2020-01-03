@@ -5,25 +5,26 @@
 ## Topic
 
 * id: int
-* title: string
-* tag: string
-* category_id: string
 * user_id: int
+* title: string
+* content: string
+* intro: string
 * group_id: int
 * is_paste: true
 * edit_time: int,
 * edit_type: int, // markdown or...
-* description: string
-* content: string
-* favourites_count: int
+* tag: string
+* category_id: string
+* favourite_count: int
 * like_count: int
 * click_count: int 
-* create_time: int
-* modify_time: int
+* created_at: time
+* updated_at: time
+* deleted_at: time
 
 
 
-## Favourites
+## Favourite
 
 * id: int
 * topic_id: int
