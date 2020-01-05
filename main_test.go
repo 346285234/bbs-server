@@ -16,7 +16,7 @@ import (
 var r *httprouter.Router
 var writer *httptest.ResponseRecorder
 
-func TestMain(m *testing.M)  {
+func TestMain(m *testing.M) {
 	setup()
 	code := m.Run()
 	os.Exit(code)
@@ -52,25 +52,28 @@ func TestGetTopic(t *testing.T) {
 
 func TestAddTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
+	type Tag struct {
+		Value string
+	}
 	type RequestBody struct {
-		Title string
-		Content string
+		Title      string
+		Content    string
 		CategoryID uint `json:"category_id"`
-		Tags []string `json:"tags"` // FIXME: get tags.
-		EditTime time.Duration `json:"edit_time"`
-		IsPaste bool `json:"is_paste"`
-		EditType int `json:"edit_type"`
-		GroupID int `json:"group_id"`
+		Tags       []Tag
+		EditTime   time.Duration `json:"edit_time"`
+		IsPaste    bool          `json:"is_paste"`
+		EditType   int           `json:"edit_type"`
+		GroupID    int           `json:"group_id"`
 	}
 	body := &RequestBody{
 		Title:   "second",
 		Content: "hello world",
-		CategoryID: 1,
-		Tags: []string{"a", "b"},
+		//CategoryID: 1,
+		//Tags: []Tag{Tag{"a"}, Tag{"b"}},
 		EditTime: time.Hour,
-		IsPaste: false,
+		IsPaste:  false,
 		EditType: 1,
-		GroupID: 1,
+		GroupID:  1,
 	}
 	json.NewEncoder(buf).Encode(&body)
 
@@ -87,7 +90,7 @@ func TestAddTopic(t *testing.T) {
 
 func TestRemoveTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
-	body := map[string]int{"id":2}
+	body := map[string]int{"id": 3}
 	json.NewEncoder(buf).Encode(&body)
 	request, _ := http.NewRequest("POST", "/topic/remove", buf)
 
@@ -103,12 +106,12 @@ func TestRemoveTopic(t *testing.T) {
 func TestUpdateTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
 	type Body struct {
-		ID int `json:"id"`
-		Title string `json:"title""`
+		ID      int    `json:"id"`
+		Title   string `json:"title""`
 		Content string `json:"content"`
 	}
 	body := &Body{
-		ID: 1,
+		ID:      1,
 		Title:   "first",
 		Content: "update content",
 	}

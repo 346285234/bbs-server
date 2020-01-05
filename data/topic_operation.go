@@ -31,7 +31,7 @@ func (_ *TopicOperation) add(topic Topic) (err error) {
 }
 
 func (_ *TopicOperation) remove(userID uint, topicID uint) (err error) {
-	if err := db.Where("author_id = ? AND id = ?", userID, topicID).Delete(&Topic{}).Error; err != nil {
+	if err := db.Where("user_id = ? AND id = ?", userID, topicID).Delete(&Topic{}).Error; err != nil {
 		return err
 	}
 

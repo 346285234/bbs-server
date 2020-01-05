@@ -1,4 +1,4 @@
-package main
+package common
 
 import (
 	"encoding/json"
@@ -6,21 +6,25 @@ import (
 	"os"
 )
 
+var Config Configuration
+
 type Configuration struct {
 	Address      string
 	ReadTimeout  int64
 	WriteTimeout int64
 	Static       string
+
+	MySQLURL string
 }
 
-func loadConfig() {
-	file, err := os.Open("config.json")
+func LoadConfig(filename string) {
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatalln("Cannot open config file", err)
 	}
 	decoder := json.NewDecoder(file)
-	config = Configuration{}
-	err = decoder.Decode(&config)
+	Config = Configuration{}
+	err = decoder.Decode(&Config)
 	if err != nil {
 		log.Fatalln("Cannot get configuration from file", err)
 	}

@@ -7,9 +7,9 @@ import (
 
 var db *gorm.DB
 
-func init() {
+func OpenDB(url string) {
 	var err error
-	db, err = gorm.Open("mysql", "root:346285234@/bbs?parseTime=true")
+	db, err = gorm.Open("mysql", url)
 	if err != nil {
 		panic(err)
 	}

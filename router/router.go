@@ -7,9 +7,9 @@ import (
 )
 
 type appError struct {
-	error error
+	error   error
 	Message string
-	Code int
+	Code    int
 }
 
 func (ae *appError) Error() string {
@@ -21,17 +21,17 @@ func NewAppError(e error) *appError {
 }
 
 type Response struct {
-	Success bool 		`json:"success"`
-	Code int 			`json:"code"`
-	Message string 		`json:"message"`
-	Data interface{} 	`json:"data"`
+	Success bool        `json:"success"`
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
-type errorHandler func(http.ResponseWriter, *http.Request, mux.Params ) *appError
+type errorHandler func(http.ResponseWriter, *http.Request, mux.Params) *appError
 
 type Route struct {
-	Method string
-	Path string
+	Method  string
+	Path    string
 	Handler errorHandler
 }
 
@@ -105,7 +105,7 @@ func checkError(fn errorHandler) mux.Handle {
 	}
 }
 
-func checkLogin(fn func (w http.ResponseWriter, r *http.Request, p mux.Params) *appError) errorHandler {
+func checkLogin(fn func(w http.ResponseWriter, r *http.Request, p mux.Params) *appError) errorHandler {
 	return func(w http.ResponseWriter, r *http.Request, p mux.Params) *appError {
 		if err := checkUser(); err == nil {
 			return fn(w, r, p)
