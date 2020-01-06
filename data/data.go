@@ -5,11 +5,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var db *gorm.DB
+var Db *gorm.DB
 
 func OpenDB(url string) {
 	var err error
-	db, err = gorm.Open("mysql", url)
+	Db, err = gorm.Open("mysql", url)
 	if err != nil {
 		panic(err)
 	}
@@ -18,6 +18,6 @@ func OpenDB(url string) {
 		&TopicCategory{}, &Comment{}, &CommentLike{}}
 
 	for _, v := range models {
-		db.AutoMigrate(v)
+		Db.AutoMigrate(v)
 	}
 }

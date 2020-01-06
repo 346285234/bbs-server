@@ -3,7 +3,6 @@
   "ReadTimeout"    : 10,
   "WriteTimeout"   : 600,
   "Static"         : "public",
-
-
-  "MySQLURL"       : "root:346285234@/bbs?parseTime=true"
+  "MySQLURL"       : "root:346285234@/bbs?parseTime=true",
+  "LogPath"        : "./info.log"
 }

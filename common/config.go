@@ -13,8 +13,8 @@ type Configuration struct {
 	ReadTimeout  int64
 	WriteTimeout int64
 	Static       string
-
-	MySQLURL string
+	MySQLURL     string
+	LogPath      string
 }
 
 func LoadConfig(filename string) {

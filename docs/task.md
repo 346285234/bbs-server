@@ -1,9 +1,15 @@
-Current:
-simple list, get, create topic.
-
 TODO:
-1. implement all functions of list, get, create
-2. all rest api
-3. optimize from list, get ,create  
+- [ ] log.
+- [ ] preset category in db.
+- [ ] handle tag. 
+- [ ] cache.
+- [ ] comment.
+- [ ] favorite and like.
+- [ ] pagination.
+- [ ] request using query.
 
-Next:
+2020.1.6
+- [x] setting config in command line.
+
+
+ 

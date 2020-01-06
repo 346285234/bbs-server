@@ -1,6 +1,3 @@
-# BBS db description
-
-
 
 ## Topic
 
