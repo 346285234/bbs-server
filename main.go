@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/346285234/bbs-server/common"
 	"github.com/346285234/bbs-server/data"
 	"github.com/346285234/bbs-server/router"
@@ -9,7 +10,12 @@ import (
 )
 
 func init() {
-	common.LoadConfig("config.json")
+	// load config.
+	var configPath string
+	flag.StringVar(&configPath, "config", "./config.json", "setting config file path")
+	flag.Parse()
+	common.LoadConfig(configPath)
+
 	data.OpenDB(common.Config.MySQLURL)
 }
 
