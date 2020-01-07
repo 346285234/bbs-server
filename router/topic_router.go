@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/346285234/bbs-server/common"
-	"github.com/346285234/bbs-server/data"
+	"github.com/346285234/bbs-server/data/models"
 	"github.com/346285234/bbs-server/data/services"
 	"github.com/julienschmidt/httprouter"
 	"log"
@@ -34,8 +34,8 @@ func (_ *TopicRouter) listTopic(w http.ResponseWriter, r *http.Request, p httpro
 	var response Response
 	response = Response{Success: true, Code: 200, Message: "OK"}
 	data := struct {
-		Total  int          `json:"total"`
-		Topics []data.Topic `json:"topics"`
+		Total  int            `json:"total"`
+		Topics []models.Topic `json:"topics"`
 	}{len(topics), topics}
 	response.Data = data
 
@@ -79,7 +79,7 @@ func (_ *TopicRouter) getTopic(w http.ResponseWriter, r *http.Request, p httprou
 func (_ *TopicRouter) addTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) *appError {
 	// Analyse response.
 
-	var topic data.Topic
+	var topic models.Topic
 	json.NewDecoder(r.Body).Decode(&topic)
 	defer r.Body.Close()
 	userID := r.Header.Get("userID")
@@ -138,7 +138,7 @@ func (_ *TopicRouter) removeTopic(w http.ResponseWriter, r *http.Request, p http
 }
 
 func (_ *TopicRouter) updateTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) *appError {
-	var topic data.Topic
+	var topic models.Topic
 	json.NewDecoder(r.Body).Decode(&topic)
 	defer r.Body.Close()
 	userID := r.Header.Get("userID")
@@ -156,6 +156,35 @@ func (_ *TopicRouter) updateTopic(w http.ResponseWriter, r *http.Request, p http
 	if err != nil {
 		return NewAppError(err)
 	}
+	w.Write(bytes)
+
+	return nil
+}
+
+
+func (_ *TopicRouter) listCategory(w http.ResponseWriter, r *http.Request, p httprouter.Params) *appError {
+	// Get data.
+	categories, err := services.Cs.Categories()
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
+	// Set response.
+	var response Response
+	response = Response{Success: true, Code: 200, Message: "OK"}
+	data := struct {
+		Total  int
+		Categories []models.TopicCategory
+	}{len(categories), categories}
+	response.Data = data
+
+	bytes, err := json.Marshal(response)
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
 	w.Write(bytes)
 
 	return nil

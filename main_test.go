@@ -126,3 +126,15 @@ func TestUpdateTopic(t *testing.T) {
 	}
 	fmt.Println(writer.Body)
 }
+
+func TestListCategory(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/categories", nil)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}

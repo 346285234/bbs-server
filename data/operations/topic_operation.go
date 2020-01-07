@@ -1,13 +1,20 @@
 package operations
 
-import "github.com/346285234/bbs-server/data"
+import (
+	"github.com/346285234/bbs-server/data"
+	"github.com/346285234/bbs-server/data/models"
+)
 
-type TopicOperation struct {
+type topicOperation struct {
 }
 
-var To = TopicOperation{}
+var To = newTopicOperation()
 
-func (_ *TopicOperation) Topics() (topics []data.Topic, err error) {
+func newTopicOperation() *topicOperation {
+	return &topicOperation{}
+}
+
+func (_ *topicOperation) List() (topics []models.Topic, err error) {
 	if err := data.Db.Find(&topics).Error; err != nil {
 		return nil, err
 	}
@@ -15,8 +22,8 @@ func (_ *TopicOperation) Topics() (topics []data.Topic, err error) {
 	return topics, nil
 }
 
-func (_ *TopicOperation) Get(id uint) (topic *data.Topic, err error) {
-	var temp data.Topic
+func (_ *topicOperation) Get(id uint) (topic *models.Topic, err error) {
+	var temp models.Topic
 	if err := data.Db.First(&temp, id).Error; err != nil {
 		return nil, err
 	}
@@ -24,7 +31,7 @@ func (_ *TopicOperation) Get(id uint) (topic *data.Topic, err error) {
 	return &temp, nil
 }
 
-func (_ *TopicOperation) Add(topic data.Topic) (err error) {
+func (_ *topicOperation) Add(topic models.Topic) (err error) {
 	if err := data.Db.Create(&topic).Error; err != nil {
 		return err
 	}
@@ -32,8 +39,8 @@ func (_ *TopicOperation) Add(topic data.Topic) (err error) {
 	return nil
 }
 
-func (_ *TopicOperation) Remove(userID uint, topicID uint) (err error) {
-	if err := data.Db.Where("user_id = ? AND id = ?", userID, topicID).Delete(&data.Topic{}).Error; err != nil {
+func (_ *topicOperation) Remove(userID uint, topicID uint) (err error) {
+	if err := data.Db.Where("user_id = ? AND id = ?", userID, topicID).Delete(&models.Topic{}).Error; err != nil {
 		return err
 	}
 
@@ -41,7 +48,7 @@ func (_ *TopicOperation) Remove(userID uint, topicID uint) (err error) {
 }
 
 // TODO: update topic.
-func (_ *TopicOperation) Update() (err error) {
+func (_ *topicOperation) Update() (err error) {
 
 	return nil
 }

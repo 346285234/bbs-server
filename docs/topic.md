@@ -286,7 +286,7 @@ user info: ["userID": 1, ]
 
 ### List category
 
-* **URL:** /topic/categories
+* **URL:** /categories
 * **method:** GET
 * **Response:**
 
@@ -297,7 +297,7 @@ user info: ["userID": 1, ]
   "message": "OK",
   "data": {
     "total": 1,
-    "category": [
+    "categories": [
       "id":1,
       "name": "x",
     ]

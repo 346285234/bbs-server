@@ -65,24 +65,24 @@ var routes = Routes{
 	},
 	//Route{
 	//	Method:  "POST",
-	//	Path:    "topic/favourites/mark",
+	//	Path:    "/topic/favourites/mark",
 	//	Handler: Tr.MarkFavourites,
 	//},
 	//Route{
 	//	Method:  "POST",
-	//	Path:    "topic/like/mark",
+	//	Path:    "/topic/like/mark",
 	//	Handler: Tr.markLike,
 	//},
 	//Route{
 	//	Method:  "GET",
-	//	Path:    "topic/tags",
+	//	Path:    "/topic/tags",
 	//	Handler: Tr.listTag,
 	//},
-	//Route{
-	//	Method:  "GET",
-	//	Path:    "topic/categories",
-	//	Handler: Tr.listCategory,
-	//},
+	Route{
+		Method:  "GET",
+		Path:    "/categories",
+		Handler: tr.listCategory,
+	},
 }
 
 func NewRouter() *mux.Router {
