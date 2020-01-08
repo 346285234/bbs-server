@@ -1,7 +1,7 @@
 package data
 
 import (
-	models2 "github.com/346285234/bbs-server/data/models"
+	"github.com/346285234/bbs-server/data/models"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
@@ -15,10 +15,9 @@ func OpenDB(url string) {
 		panic(err)
 	}
 
-	models := []interface{}{&models2.Topic{}, &models2.TopicFavorite{}, &models2.TopicLike{},
-		&models2.TopicCategory{}, &models2.Comment{}, &models2.CommentLike{}}
+	model_intefaces := []interface{}{&models.Topic{}, &models.Category{}, &models.Tag{}}
 
-	for _, v := range models {
+	for _, v := range model_intefaces {
 		Db.AutoMigrate(v)
 	}
 }

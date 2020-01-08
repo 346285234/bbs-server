@@ -175,8 +175,36 @@ func (_ *TopicRouter) listCategory(w http.ResponseWriter, r *http.Request, p htt
 	response = Response{Success: true, Code: 200, Message: "OK"}
 	data := struct {
 		Total  int
-		Categories []models.TopicCategory
+		Categories []models.Category
 	}{len(categories), categories}
+	response.Data = data
+
+	bytes, err := json.Marshal(response)
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
+	w.Write(bytes)
+
+	return nil
+}
+
+func (_ *TopicRouter) listTag(w http.ResponseWriter, r *http.Request, p httprouter.Params) *appError {
+	// Get data.
+	tags, err := services.TagS.Tags()
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
+	// Set response.
+	var response Response
+	response = Response{Success: true, Code: 200, Message: "OK"}
+	data := struct {
+		Total  int
+		Tags []models.Tag
+	}{len(tags), tags}
 	response.Data = data
 
 	bytes, err := json.Marshal(response)

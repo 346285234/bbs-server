@@ -14,7 +14,7 @@ func newCategoryOperation() *categoryOperation {
 	return &categoryOperation{}
 }
 
-func (_ *categoryOperation) List() (categories []models.TopicCategory, err error) {
+func (_ *categoryOperation) List() (categories []models.Category, err error) {
 	if err := data.Db.Find(&categories).Error; err != nil {
 		return nil, err
 	}
@@ -22,10 +22,10 @@ func (_ *categoryOperation) List() (categories []models.TopicCategory, err error
 	return categories, nil
 }
 
-func (_ *categoryOperation) add(category models.TopicCategory) (err error) {
+func (_ *categoryOperation) add(category models.Category) (err error) {
 	return data.Db.Create(&category).Error
 }
 
 func (_ *categoryOperation) remove(id uint) (err error) {
-	return data.Db.Where("id = ?", id).Delete(&models.TopicCategory{}).Error
+	return data.Db.Where("id = ?", id).Delete(&models.Category{}).Error
 }

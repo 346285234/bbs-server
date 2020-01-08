@@ -10,6 +10,6 @@ type CategoryService struct {
 
 var Cs = CategoryService{}
 
-func (_ *CategoryService) Categories() (categories []models.TopicCategory, err error) {
+func (_ *CategoryService) Categories() (categories []models.Category, err error) {
 	return operations.Co.List()
 }

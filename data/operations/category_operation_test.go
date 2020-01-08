@@ -32,9 +32,9 @@ func TestList(t *testing.T) {
 func TestAdd(t *testing.T) {
 	values := []string{"Music", "Comedy", "Film", "Entertainment", "Gaming", "Sports", "Tech",
 		"Beauty & Fashion", "News", "Health"}
-	var categories = make([]models.TopicCategory, len(values))
+	var categories = make([]models.Category, len(values))
 	for i, v := range values {
-		categories[i] = models.TopicCategory{Value:v}
+		categories[i] = models.Category{Value: v}
 	}
 
 	for _, v := range categories {

@@ -105,7 +105,7 @@ user info: ["userID": 1, ]
   "title": "x",
   "content": "x",
   "category_id": 1,
-  "tags": ["a", "b"],
+  "tags": [{"id": 1, "value": "a"},{"value": "b"}],
   "edit_time":1111, // edit use how many time
   "is_paste":true,
   "edit_type":1, // markdown or...
@@ -125,7 +125,7 @@ user info: ["userID": 1, ]
   {
     "id": 1,
     "title": "x",
-    "tag": "x",
+    "tags": [{"id": 1, "value": "a"}, {"id": 2, "value":  "b"}],
     "category_id": 1,
     "category_name": "x",
     "author_id": 1,

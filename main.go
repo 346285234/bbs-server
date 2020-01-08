@@ -8,10 +8,18 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"net/http"
 	"os"
+	"testing"
 	"time"
 )
 
 func init() {
+
+	// make test init before flag.
+	var _ = func() bool {
+		testing.Init()
+		return true
+	}()
+
 	// load config.
 	var configPath string
 	flag.StringVar(&configPath, "config", "./config.json", "setting config file path")

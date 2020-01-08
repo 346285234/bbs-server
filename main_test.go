@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/346285234/bbs-server/router"
 	"github.com/julienschmidt/httprouter"
@@ -25,6 +26,7 @@ func TestMain(m *testing.M) {
 func setup() {
 	r = router.NewRouter()
 	writer = httptest.NewRecorder()
+	flag.Parse()
 }
 
 func TestListTopic(t *testing.T) {
@@ -53,6 +55,7 @@ func TestGetTopic(t *testing.T) {
 func TestAddTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
 	type Tag struct {
+		Id uint
 		Value string
 	}
 	type RequestBody struct {
@@ -68,8 +71,8 @@ func TestAddTopic(t *testing.T) {
 	body := &RequestBody{
 		Title:   "second",
 		Content: "hello world",
-		//CategoryID: 1,
-		//Tags: []Tag{Tag{"a"}, Tag{"b"}},
+		CategoryID: 1,
+		Tags: []Tag{Tag{1, "go"}, Tag{2, "test"}, Tag{Value:"new"}},
 		EditTime: time.Hour,
 		IsPaste:  false,
 		EditType: 1,
@@ -129,6 +132,18 @@ func TestUpdateTopic(t *testing.T) {
 
 func TestListCategory(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/categories", nil)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestListTag(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/tags", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {

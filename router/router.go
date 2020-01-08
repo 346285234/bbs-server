@@ -73,11 +73,11 @@ var routes = Routes{
 	//	Path:    "/topic/like/mark",
 	//	Handler: Tr.markLike,
 	//},
-	//Route{
-	//	Method:  "GET",
-	//	Path:    "/topic/tags",
-	//	Handler: Tr.listTag,
-	//},
+	Route{
+		Method:  "GET",
+		Path:    "/tags",
+		Handler: tr.listTag,
+	},
 	Route{
 		Method:  "GET",
 		Path:    "/categories",
