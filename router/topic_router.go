@@ -217,3 +217,81 @@ func (_ *TopicRouter) listTag(w http.ResponseWriter, r *http.Request, p httprout
 
 	return nil
 }
+
+func (_ *TopicRouter) markFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) *appError {
+
+	userIDStr := r.Header.Get("userID")
+	userID := uint(common.StrToInt(userIDStr))
+
+	type RequestBody struct {
+		topicID uint
+		isMark bool `json:"type"`
+	}
+	var body RequestBody
+	json.NewDecoder(r.Body).Decode(&body)
+	defer r.Body.Close()
+
+	var favorite models.TopicFavorite
+	favorite.TopicID = body.topicID
+	favorite.UserID = userID
+
+	// Get data.
+	err := services.Fs.Mark(favorite, body.isMark)
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
+	// Set response.
+	var response Response
+	response = Response{Success: true, Code: 200, Message: "OK"}
+
+	bytes, err := json.Marshal(response)
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
+	w.Write(bytes)
+
+	return nil
+}
+
+func (_ *TopicRouter) markLike(w http.ResponseWriter, r *http.Request, p httprouter.Params) *appError {
+
+	userIDStr := r.Header.Get("userID")
+	userID := uint(common.StrToInt(userIDStr))
+
+	type RequestBody struct {
+		topicID uint
+		isMark bool `json:"type"`
+	}
+	var body RequestBody
+	json.NewDecoder(r.Body).Decode(&body)
+	defer r.Body.Close()
+
+	var like models.TopicLike
+	like.TopicID = body.topicID
+	like.UserID = userID
+
+	// Get data.
+	err := services.Ls.Mark(like, body.isMark)
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
+	// Set response.
+	var response Response
+	response = Response{Success: true, Code: 200, Message: "OK"}
+
+	bytes, err := json.Marshal(response)
+
+	if err != nil {
+		return NewAppError(err)
+	}
+
+	w.Write(bytes)
+
+	return nil
+}

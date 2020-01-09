@@ -24,22 +24,22 @@ type Topic struct {
 	Tags       []Tag    `gorm:"many2many:topic_tags;"` // many to many
 	Category   Category // belong to
 	CategoryID uint     `json:"category_id"`
-	//FavouritesCount uint
-	//LikeCount uint
-	//ClickCount uint
+	FavouritesCount uint
+	LikeCount uint
+	ClickCount uint
 }
 
-//type TopicFavorite struct {
-//	gorm.Model
-//	TopicID uint
-//	UserID uint
-//}
-//
-//type TopicLike struct {
-//	gorm.Model
-//	TopicID uint
-//	UserID uint
-//}
+type TopicFavorite struct {
+	gorm.Model
+	TopicID uint
+	UserID uint
+}
+
+type TopicLike struct {
+	gorm.Model
+	TopicID uint
+	UserID uint
+}
 
 type Tag struct {
 	gorm.Model

@@ -44,17 +44,14 @@ user info: ["userID": 1, ]
       {
         "id": 1,
         "title": "x",
-        "tag": "x",
-        "category_id": 1,
-        "category_name": "x",
-        "author_id": 1,
-        "author_name": "x",
-        "portrait": "x",
+        "tag": ["a", "b"],
+        "category": "x",
+        "author": {"id": 1, "name": "x", "portrait": "x"},
         "description": "x",
         "image_url": "x",
         "modify_time": 1111,
-        "favourites_count": 1,
-        "likes_count": 1,
+        "favourite_count": 1,
+        "like_count": 1,
         "click_count": 1,
       }
     ]
@@ -77,18 +74,15 @@ user info: ["userID": 1, ]
   {
     "id": 1,
     "title": "x",
-    "tag": "x",
-    "category_id": 1,
-    "category_name": "x",
-    "author_id": 1,
-    "author_name": "x",
-    "portrait": "x",
+    "tag": ["a", "b"],
+    "category": "x",
+    "author": {"id": 1, "name": "x", "portrait": "x"},
     "description": "x",
     "content": "x",
     "modify_time": 1111,
-    "favourites_count": 1,
-    "likes_count": 1,
-    "click_count": 1,
+    "favorite_count": 1,
+    "like_count": 1,
+    "view_count": 1,
   }
 }
 ```
@@ -104,13 +98,13 @@ user info: ["userID": 1, ]
 {
   "title": "x",
   "content": "x",
-  "category_id": 1,
-  "tags": [{"id": 1, "value": "a"},{"value": "b"}],
-  "edit_time":1111, // edit use how many time
-  "is_paste":true,
+  "category": "x",
+  "tags": ["a", "b"],
+  // future use.
+  "edit_time": 1111, // edit use how many time
+  "is_paste": true,
   "edit_type":1, // markdown or...
   "group_id": 1,
-  
 }
 ```
 
@@ -125,18 +119,15 @@ user info: ["userID": 1, ]
   {
     "id": 1,
     "title": "x",
-    "tags": [{"id": 1, "value": "a"}, {"id": 2, "value":  "b"}],
-    "category_id": 1,
-    "category_name": "x",
-    "author_id": 1,
-    "author_name": "x",
-    "portrait": "x",
+    "tags": ["a", "b"],
+    "category": "x",
+    "author": {"id": 1, "name": "x", "portrait": "x"},
     "description": "x",
     "content": "x",
     "modify_time": 1111,
-    "favourites_count": 1,
-    "likes_count": 1,
-    "click_count": 1,
+    "favorite_count": 1,
+    "like_count": 1,
+    "view_count": 1,
   }
 }
 ```
@@ -176,12 +167,13 @@ user info: ["userID": 1, ]
 {
   "id": 1,
   "title": "x",
-  "tag": "x",
-  "category_id": 1,
-  "category_name": "x",
+  "tag": ["a", "b"],
+  "category": "x",
   "content": "x",
-  "edit_time":"x",
-  "is_paste":true,
+  // future use.
+  "edit_time": 1111, // edit use how many time
+  "is_paste": true,
+  "edit_type":1, // markdown or...
 }
 ```
 
@@ -196,32 +188,29 @@ user info: ["userID": 1, ]
   {
     "id": 1,
     "title": "x",
-    "tag": "x",
-    "category_id":1,
-    "category_name":"x",
-    "author_id": 1,
-    "author_name": "x",
-    "portrait": "x",
+    "tag": ["a", "b"],
+    "category":"x",
+    "author": {"id": 1, "name": "x", "portrait": "x"},
     "description": "x",
     "content": "x",
     "modify_time": 1111,
-    "favourites_count": 1,
-    "likes_count": 1,
-    "click_count": 1,
+    "favorite_count": 1,
+    "like_count": 1,
+    "view_count": 1,
   }
 }
 ```
 
 ### Mark&unmark favourites
 
-* **URL:** /topic/favourites/mark
+* **URL:** /topic/favorite/mark
 * **method:** POST
 * **header:** user info
 * **body:**
 
 ```json
 {
-  "id": 1,
+  "topic_id": 1,
   "type": true,
 }
 ```
@@ -239,15 +228,15 @@ user info: ["userID": 1, ]
 
 ### Mark&unmark like
 
-* **URL:** /topic/like/mark
+* **URL:** /like/[topic_id]
 * **method:** POST
 * **header:** user info
 * **body:**
 
 ```json
 {
-  "id": 1,
-  "type": true,
+  "type": 1,
+  "is_mark": true,
 }
 ```
 
@@ -265,7 +254,7 @@ user info: ["userID": 1, ]
 
 ### List tag
 
-* **URL:** /topic/tags
+* **URL:** /tags
 * **method:** GET
 * **header:** user info
 * **Response:**
@@ -277,9 +266,7 @@ user info: ["userID": 1, ]
   "message": "OK",
   "data": {
     "total": 1,
-    "tags": [
-      "value": "x",
-    ]
+    "tags": ["a", "b"]
   }
 }
 ```
@@ -297,10 +284,7 @@ user info: ["userID": 1, ]
   "message": "OK",
   "data": {
     "total": 1,
-    "categories": [
-      "id":1,
-      "name": "x",
-    ]
+    "categories": ["a", "b"]
   }
 }
 ```

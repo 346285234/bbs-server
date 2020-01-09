@@ -63,16 +63,16 @@ var routes = Routes{
 		Path:    "/topic/update",
 		Handler: checkLogin(tr.updateTopic),
 	},
-	//Route{
-	//	Method:  "POST",
-	//	Path:    "/topic/favourites/mark",
-	//	Handler: Tr.MarkFavourites,
-	//},
-	//Route{
-	//	Method:  "POST",
-	//	Path:    "/topic/like/mark",
-	//	Handler: Tr.markLike,
-	//},
+	Route{
+		Method:  "POST",
+		Path:    "/favorites/mark",
+		Handler: tr.markFavorite,
+	},
+	Route{
+		Method:  "POST",
+		Path:    "/like/mark",
+		Handler: tr.markLike,
+	},
 	Route{
 		Method:  "GET",
 		Path:    "/tags",

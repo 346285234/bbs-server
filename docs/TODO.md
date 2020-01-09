@@ -1,10 +1,16 @@
 TODO:
-- [ ] handle tag. 
+- [ ] rest api request and response.
+- [ ] database optimize.
 - [ ] cache.
 - [ ] comment.
-- [ ] favorite and like.
 - [ ] pagination.
 - [ ] request using query.
+
+2020.1.9
+- [x] add like, favorite.
+
+2020.1.8
+- [x] add tag, category.
 
 2020.1.7
 - [x] log.
