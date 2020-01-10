@@ -2,7 +2,7 @@
 
 ### List comments
 
-* **URL:** /comments/[topic_id]
+* **URL:** /comments/:topic_id
 * **method:** GET
 * **Response:**
 
@@ -38,14 +38,14 @@
 
 ### Add & replay comment
 
-* **URL:** /comment/[topic_id]/add
+* **URL:** /comment/:topic_id/add
 * **method:** POST
 * **header:** user info
 * **body:**
 
 ```json
 {
-  "id":1,
+  "parent_id": -1,
   "content": "x",
 }
 ```
@@ -67,17 +67,18 @@
 }
 ```
 
-### Mark & unmark comment like
 
-* **URL:** /like/[comment_id]
+
+### Revoke comment
+
+* **URL:** /comment/:topic_id/revoke
 * **method:** POST
 * **header:** user info
 * **body:**
 
 ```json
 {
-  "type": 2,
-	"is_mark": true,
+  "id": 1,
 }
 ```
 
@@ -88,6 +89,7 @@
   "success": true,
   "code": 200,
   "message": "OK",
-  "data": {}
+  "data": {},
 }
 ```
+

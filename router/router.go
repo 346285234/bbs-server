@@ -2,32 +2,15 @@ package router
 
 import (
 	"encoding/json"
+	"github.com/346285234/bbs-server/data/models"
+	"github.com/346285234/bbs-server/router/handler"
 	mux "github.com/julienschmidt/httprouter"
 	"net/http"
 )
 
-type appError struct {
-	error   error
-	Message string
-	Code    int
-}
 
-func (ae *appError) Error() string {
-	return ae.Message + string(ae.Code)
-}
 
-func NewAppError(e error) *appError {
-	return &appError{e, "", 500}
-}
-
-type Response struct {
-	Success bool        `json:"success"`
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
-
-type errorHandler func(http.ResponseWriter, *http.Request, mux.Params) *appError
+type errorHandler func(http.ResponseWriter, *http.Request, mux.Params) *models.AppError
 
 type Route struct {
 	Method  string
@@ -41,47 +24,67 @@ var routes = Routes{
 	Route{
 		Method:  "GET",
 		Path:    "/topics",
-		Handler: tr.listTopic,
+		Handler: handler.Th.ListTopic,
 	},
 	Route{
 		Method:  "GET",
 		Path:    "/topic/:id",
-		Handler: tr.getTopic,
+		Handler: handler.Th.GetTopic,
 	},
 	Route{
 		Method:  "POST",
 		Path:    "/topic/add",
-		Handler: checkLogin(tr.addTopic),
+		Handler: checkLogin(handler.Th.AddTopic),
 	},
 	Route{
 		Method:  "POST",
 		Path:    "/topic/remove",
-		Handler: checkLogin(tr.removeTopic),
+		Handler: checkLogin(handler.Th.RemoveTopic),
 	},
 	Route{
 		Method:  "POST",
 		Path:    "/topic/update",
-		Handler: checkLogin(tr.updateTopic),
+		Handler: checkLogin(handler.Th.UpdateTopic),
 	},
 	Route{
 		Method:  "POST",
-		Path:    "/favorites/mark",
-		Handler: tr.markFavorite,
+		Path:    "/favorite/topic/:topic_id/mark",
+		Handler: checkLogin(handler.FaH.MarkFavorite),
+	},
+	Route{
+		Method:  "GET",
+		Path:    "/favorite/topic/:topic_id",
+		Handler: checkLogin(handler.FaH.CheckFavorite),
 	},
 	Route{
 		Method:  "POST",
-		Path:    "/like/mark",
-		Handler: tr.markLike,
+		Path:    "/like/topic/:topic_id/mark",
+		Handler: checkLogin(handler.LiH.MarkLike),
+	},
+	Route{
+		Method:  "POST",
+		Path:    "/like/comment/:comment_id/mark",
+		Handler: checkLogin(handler.LiH.MarkLike),
+	},
+	Route{
+		Method:  "GET",
+		Path:    "/like/topic/:topic_id",
+		Handler: checkLogin(handler.LiH.CheckLike),
+	},
+	Route{
+		Method:  "GET",
+		Path:    "/like/comment/:comment_id",
+		Handler: checkLogin(handler.LiH.CheckLike),
 	},
 	Route{
 		Method:  "GET",
 		Path:    "/tags",
-		Handler: tr.listTag,
+		Handler: checkLogin(handler.TaH.ListTag),
 	},
 	Route{
 		Method:  "GET",
 		Path:    "/categories",
-		Handler: tr.listCategory,
+		Handler: handler.CaH.ListCategory,
 	},
 }
 
@@ -97,7 +100,7 @@ func NewRouter() *mux.Router {
 func checkError(fn errorHandler) mux.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p mux.Params) {
 		if err := fn(w, r, p); err != nil {
-			res := Response{Success: false, Code: err.Code, Message: err.Message}
+			res := models.Response{Success: false, Code: err.Code, Message: err.Message}
 			bytes, _ := json.Marshal(res)
 			w.WriteHeader(err.Code)
 			w.Write(bytes)
@@ -105,12 +108,12 @@ func checkError(fn errorHandler) mux.Handle {
 	}
 }
 
-func checkLogin(fn func(w http.ResponseWriter, r *http.Request, p mux.Params) *appError) errorHandler {
-	return func(w http.ResponseWriter, r *http.Request, p mux.Params) *appError {
+func checkLogin(fn func(w http.ResponseWriter, r *http.Request, p mux.Params) *models.AppError) errorHandler {
+	return func(w http.ResponseWriter, r *http.Request, p mux.Params) *models.AppError {
 		if err := checkUser(); err == nil {
 			return fn(w, r, p)
 		} else {
-			return &appError{err, "not login", 500}
+			return models.NewAppError(err)
 		}
 	}
 }

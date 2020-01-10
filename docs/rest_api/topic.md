@@ -45,7 +45,8 @@ user info: ["userID": 1, ]
         "id": 1,
         "title": "x",
         "tag": ["a", "b"],
-        "category": "x",
+        "category_id": 1,
+        "category_name": "x",
         "author": {"id": 1, "name": "x", "portrait": "x"},
         "description": "x",
         "image_url": "x",
@@ -75,7 +76,8 @@ user info: ["userID": 1, ]
     "id": 1,
     "title": "x",
     "tag": ["a", "b"],
-    "category": "x",
+    "category_id": 1,
+    "category_name": "x",
     "author": {"id": 1, "name": "x", "portrait": "x"},
     "description": "x",
     "content": "x",
@@ -98,7 +100,7 @@ user info: ["userID": 1, ]
 {
   "title": "x",
   "content": "x",
-  "category": "x",
+  "category_id": 1,
   "tags": ["a", "b"],
   // future use.
   "edit_time": 1111, // edit use how many time
@@ -120,7 +122,8 @@ user info: ["userID": 1, ]
     "id": 1,
     "title": "x",
     "tags": ["a", "b"],
-    "category": "x",
+    "category_id": 1,
+    "category_name": "x",
     "author": {"id": 1, "name": "x", "portrait": "x"},
     "description": "x",
     "content": "x",
@@ -168,7 +171,7 @@ user info: ["userID": 1, ]
   "id": 1,
   "title": "x",
   "tag": ["a", "b"],
-  "category": "x",
+  "category_id": 1,
   "content": "x",
   // future use.
   "edit_time": 1111, // edit use how many time
@@ -189,7 +192,8 @@ user info: ["userID": 1, ]
     "id": 1,
     "title": "x",
     "tag": ["a", "b"],
-    "category":"x",
+    "category_id": 1,
+    "category_name": "x",
     "author": {"id": 1, "name": "x", "portrait": "x"},
     "description": "x",
     "content": "x",
@@ -201,90 +205,3 @@ user info: ["userID": 1, ]
 }
 ```
 
-### Mark&unmark favourites
-
-* **URL:** /topic/favorite/mark
-* **method:** POST
-* **header:** user info
-* **body:**
-
-```json
-{
-  "topic_id": 1,
-  "type": true,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-### Mark&unmark like
-
-* **URL:** /like/[topic_id]
-* **method:** POST
-* **header:** user info
-* **body:**
-
-```json
-{
-  "type": 1,
-  "is_mark": true,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-
-### List tag
-
-* **URL:** /tags
-* **method:** GET
-* **header:** user info
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {
-    "total": 1,
-    "tags": ["a", "b"]
-  }
-}
-```
-
-### List category
-
-* **URL:** /categories
-* **method:** GET
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {
-    "total": 1,
-    "categories": ["a", "b"]
-  }
-}
-```
