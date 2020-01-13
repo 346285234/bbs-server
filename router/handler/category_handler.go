@@ -22,20 +22,25 @@ func (_ *categoryHandler) ListCategory(w http.ResponseWriter, r *http.Request, p
 	}
 
 	// Set response.
-	var response models.Response
-	response = models.Response{Success: true, Code: 200, Message: "OK"}
-	data := struct {
-		Total  int
-		Categories []models.Category
-	}{len(categories), categories}
-	response.Data = data
-
+	type Category struct {
+		Id uint `json:"id"`
+		Name string `json:"name"`
+	}
+	type Data struct {
+		Total  int `json:"total"`
+		Categories []Category `json:"categories"`
+	}
+	values := make([]Category, len(categories))
+	for i, v := range categories {
+		value := Category{v.ID, v.Value}
+		values[i] = value
+	}
+	data := Data{len(values), values}
+	response := models.Response{true, 200, "OK", data}
 	bytes, err := json.Marshal(response)
-
 	if err != nil {
 		return models.NewAppError(err)
 	}
-
 	w.Write(bytes)
 
 	return nil

@@ -16,23 +16,22 @@ var FaH = favoriteHanlder{}
 
 func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
 
-	userIDStr := r.Header.Get("userID")
-	userID := uint(common.StrToInt(userIDStr))
+	topicID := uint(common.StrToInt(p.ByName("topic_id")))
+	userID := uint(common.StrToInt(r.Header.Get("userID")))
 
 	type RequestBody struct {
-		topicID uint
-		isMark bool `json:"type"`
+		unmark bool `json:"unmark"`
 	}
 	var body RequestBody
 	json.NewDecoder(r.Body).Decode(&body)
 	defer r.Body.Close()
 
 	var favorite models.TopicFavorite
-	favorite.TopicID = body.topicID
+	favorite.TopicID = topicID
 	favorite.UserID = userID
 
 	// Get data.
-	err := services.Fs.Mark(favorite, body.isMark)
+	err := services.Fs.Mark(favorite, !body.unmark)
 
 	if err != nil {
 		return models.NewAppError(err)
@@ -54,5 +53,8 @@ func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p
 }
 
 func (_ *favoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
+	topicID := uint(common.StrToInt(p.ByName("topic_id")))
+	userID := uint(common.StrToInt(r.Header.Get("userID")))
+
 	return nil
 }

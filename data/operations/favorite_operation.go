@@ -18,6 +18,14 @@ func (_ *favoriteOperation) List() (favorites []models.TopicFavorite, err error)
 	return favorites, nil
 }
 
+func (_ *favoriteOperation) Get() (favorites []models.TopicFavorite, err error) {
+	if err := data.Db.Find(&favorites).Error; err != nil {
+		return nil, err
+	}
+
+	return favorites, nil
+}
+
 func (_ *favoriteOperation) Add(favorite models.TopicFavorite) (err error) {
 	return data.Db.Create(&favorite).Error
 }

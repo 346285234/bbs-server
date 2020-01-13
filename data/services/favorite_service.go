@@ -17,3 +17,7 @@ func (_ *FavoriteService) Mark(favorite models.TopicFavorite, isMark bool) (err 
 		return operations.Fo.Remove(favorite)
 	}
 }
+
+func (_ *FavoriteService) Check(favorite models.TopicFavorite) (err error) {
+
+}

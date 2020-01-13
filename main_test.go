@@ -29,6 +29,8 @@ func setup() {
 	flag.Parse()
 }
 
+// MARK: Topic.
+
 func TestListTopic(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/topics", nil)
 	r.ServeHTTP(writer, request)
@@ -130,6 +132,8 @@ func TestUpdateTopic(t *testing.T) {
 	fmt.Println(writer.Body)
 }
 
+// MARK: Category & Tag.
+
 func TestListCategory(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/categories", nil)
 	r.ServeHTTP(writer, request)
@@ -153,3 +157,32 @@ func TestListTag(t *testing.T) {
 	fmt.Println(writer.Body)
 
 }
+
+// MARK: Like & favorite.
+
+func TestMarkFavorite(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/tags", nil)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestCheckFavorite(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/tags", nil)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+
+// MARK: Comment
