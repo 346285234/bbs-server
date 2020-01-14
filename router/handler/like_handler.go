@@ -16,23 +16,21 @@ var LiH = likeHandler{}
 
 func (_ *likeHandler) MarkLike(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
 
-	userIDStr := r.Header.Get("userID")
-	userID := uint(common.StrToInt(userIDStr))
+	topicID := uint(common.StrToInt(p.ByName("topic_id")))
+	userID := uint(common.StrToInt(r.Header.Get("userID")))
+	var like models.TopicLike
+	like.TopicID = topicID
+	like.UserID = userID
 
 	type RequestBody struct {
-		topicID uint
-		isMark bool `json:"type"`
+		Unmark bool `json:"unmark"`
 	}
 	var body RequestBody
 	json.NewDecoder(r.Body).Decode(&body)
 	defer r.Body.Close()
 
-	var like models.TopicLike
-	like.TopicID = body.topicID
-	like.UserID = userID
-
 	// Get data.
-	err := services.Ls.Mark(like, body.isMark)
+	err := services.Ls.Mark(like, !body.Unmark)
 
 	if err != nil {
 		return models.NewAppError(err)
@@ -54,5 +52,33 @@ func (_ *likeHandler) MarkLike(w http.ResponseWriter, r *http.Request, p httprou
 }
 
 func (_ *likeHandler) CheckLike(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
+	topicID := uint(common.StrToInt(p.ByName("topic_id")))
+	userID := uint(common.StrToInt(r.Header.Get("userID")))
+
+	var like models.TopicLike
+	like.TopicID = topicID
+	like.UserID = userID
+
+	err := services.Ls.Check(like)
+	var isMark bool
+	if err == nil {
+		isMark = true
+	} else {
+		isMark = false
+	}
+	var data = struct{
+		IsMark bool `json:"is_mark"`
+	}{isMark}
+
+	// Set response.
+	var response models.Response
+	response = models.Response{true, 200, "OK", data}
+	bytes, err := json.Marshal(response)
+	if err != nil {
+		return models.NewAppError(err)
+	}
+
+	w.Write(bytes)
+
 	return nil
 }

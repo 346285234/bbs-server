@@ -15,9 +15,7 @@ func OpenDB(url string) {
 		panic(err)
 	}
 
-	model_intefaces := []interface{}{&models.Topic{}, &models.Category{}, &models.Tag{}}
-
-	for _, v := range model_intefaces {
+	for _, v := range models.Models {
 		Db.AutoMigrate(v)
 	}
 }

@@ -16,8 +16,10 @@ func (_ *FavoriteService) Mark(favorite models.TopicFavorite, isMark bool) (err 
 	} else {
 		return operations.Fo.Remove(favorite)
 	}
+	// Update favorite count.
 }
 
 func (_ *FavoriteService) Check(favorite models.TopicFavorite) (err error) {
-
+	_, err = operations.Fo.Get(favorite.UserID, favorite.TopicID)
+	return err
 }

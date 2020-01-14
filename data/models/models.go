@@ -10,12 +10,14 @@ const (
 	Markdown EditType = 1
 )
 
+var Models = []interface{}{&Topic{}, &Category{}, &Tag{}, &TopicFavorite{}, &TopicLike{}}
+
 type Topic struct {
 	gorm.Model
-	UserID uint
-	Title string
-	Content string
-	Intro string
+	UserID uint `json:"author_id"`
+	Title string `json:"title"`
+	Content string `json:"content"`
+	Intro string `json:"description"`
 	GroupID uint `json:"group_id"`
 	IsPaste bool `json:"is_paste"`
 	EditTime time.Duration `json:"edit_time"`
@@ -24,9 +26,9 @@ type Topic struct {
 	Tags       []Tag    `gorm:"many2many:topic_tags;"` // many to many
 	Category   Category // belong to
 	CategoryID uint     `json:"category_id"`
-	FavouritesCount uint
-	LikeCount uint
-	ClickCount uint
+	FavouritesCount uint `json:"favorite_count"`
+	LikeCount uint `json:"like_count"`
+	ClickCount uint `json:"view_count"`
 }
 
 type TopicFavorite struct {
@@ -54,16 +56,16 @@ type Category struct {
 	topics []Topic
 }
 
-//type Comment struct {
-//	gorm.Model
-//	AuthorID uint
-//	Content string
-//	LikeCount uint
-//	Children []Comment `gorm:"foreignkey:Parent"` // has many
-//	Parent uint
-//	TopicID uint
-//}
-//
+type Comment struct {
+	gorm.Model
+	AuthorID uint
+	Content string
+	LikeCount uint
+	Children []Comment `gorm:"foreignkey:Parent"` // has many
+	Parent uint
+	TopicID uint
+}
+
 //type CommentLike struct {
 //	gorm.Model
 //	CommentID uint

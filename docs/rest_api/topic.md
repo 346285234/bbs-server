@@ -53,7 +53,7 @@ user info: ["userID": 1, ]
         "modify_time": 1111,
         "favourite_count": 1,
         "like_count": 1,
-        "click_count": 1,
+        "view_count": 1,
       }
     ]
   }

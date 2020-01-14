@@ -18,20 +18,19 @@ func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p
 
 	topicID := uint(common.StrToInt(p.ByName("topic_id")))
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
+	var favorite models.TopicFavorite
+	favorite.TopicID = topicID
+	favorite.UserID = userID
 
 	type RequestBody struct {
-		unmark bool `json:"unmark"`
+		Unmark bool `json:"unmark"`
 	}
 	var body RequestBody
 	json.NewDecoder(r.Body).Decode(&body)
 	defer r.Body.Close()
 
-	var favorite models.TopicFavorite
-	favorite.TopicID = topicID
-	favorite.UserID = userID
-
 	// Get data.
-	err := services.Fs.Mark(favorite, !body.unmark)
+	err := services.Fs.Mark(favorite, !body.Unmark)
 
 	if err != nil {
 		return models.NewAppError(err)
@@ -55,6 +54,31 @@ func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p
 func (_ *favoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
 	topicID := uint(common.StrToInt(p.ByName("topic_id")))
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
+
+	var favorite models.TopicFavorite
+	favorite.TopicID = topicID
+	favorite.UserID = userID
+
+	err := services.Fs.Check(favorite)
+	var isMark bool
+	if err == nil {
+		isMark = true
+	} else {
+		isMark = false
+	}
+	var data = struct{
+		IsMark bool `json:"is_mark"`
+	}{isMark}
+
+	// Set response.
+	var response models.Response
+	response = models.Response{true, 200, "OK", data}
+	bytes, err := json.Marshal(response)
+	if err != nil {
+		return models.NewAppError(err)
+	}
+
+	w.Write(bytes)
 
 	return nil
 }

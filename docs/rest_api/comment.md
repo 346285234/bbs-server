@@ -36,9 +36,9 @@
 }
 ```
 
-### Add & replay comment
+### Reply comment
 
-* **URL:** /comment/:topic_id/add
+* **URL:** /comment/:topic_id/reply
 * **method:** POST
 * **header:** user info
 * **body:**

@@ -18,10 +18,21 @@ func (_ *likeOperation) List() (like []models.TopicLike, err error) {
 	return like, nil
 }
 
+func (_ *likeOperation) Get(userID uint, topicID uint) (like *models.TopicLike, err error) {
+	var result models.TopicLike
+	if err := data.Db.Where("user_id = ? AND topic_id = ?", userID, topicID).
+		First(&result).Error; err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
 func (_ *likeOperation) Add(like models.TopicLike) (err error) {
 	return data.Db.Create(&like).Error
 }
 
 func (_ *likeOperation) Remove(like models.TopicLike) (err error) {
-	return data.Db.Where("topic_id = ? AND user_id = ?", like.TopicID, like.UserID).Delete(&models.TopicFavorite{}).Error
+	return data.Db.Where("topic_id = ? AND user_id = ?", like.TopicID, like.UserID).
+		Delete(&models.TopicLike{}).Error
 }

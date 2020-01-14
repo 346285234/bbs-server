@@ -16,6 +16,7 @@ import (
 
 var r *httprouter.Router
 var writer *httptest.ResponseRecorder
+var userID = "1"
 
 func TestMain(m *testing.M) {
 	setup()
@@ -71,20 +72,20 @@ func TestAddTopic(t *testing.T) {
 		GroupID    int           `json:"group_id"`
 	}
 	body := &RequestBody{
-		Title:   "second",
+		Title:   "Qq",
 		Content: "hello world",
 		CategoryID: 1,
 		Tags: []Tag{Tag{1, "go"}, Tag{2, "test"}, Tag{Value:"new"}},
 		EditTime: time.Hour,
-		IsPaste:  false,
+		IsPaste:  true,
 		EditType: 1,
-		GroupID:  1,
+		GroupID:  10,
 	}
 	json.NewEncoder(buf).Encode(&body)
 
 	request, _ := http.NewRequest("POST", "/topic/add", buf)
 
-	request.Header.Add("userID", "1")
+	request.Header.Add("userID", string(userID))
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -99,7 +100,7 @@ func TestRemoveTopic(t *testing.T) {
 	json.NewEncoder(buf).Encode(&body)
 	request, _ := http.NewRequest("POST", "/topic/remove", buf)
 
-	request.Header.Add("userID", "1")
+	request.Header.Add("userID", string(userID))
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -123,7 +124,7 @@ func TestUpdateTopic(t *testing.T) {
 	json.NewEncoder(buf).Encode(&body)
 
 	request, _ := http.NewRequest("POST", "/topic/update", buf)
-	request.Header.Add("userID", "1")
+	request.Header.Add("userID", string(userID))
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -148,6 +149,7 @@ func TestListCategory(t *testing.T) {
 
 func TestListTag(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/tags", nil)
+	request.Header.Set("userID", string(userID))
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -161,7 +163,14 @@ func TestListTag(t *testing.T) {
 // MARK: Like & favorite.
 
 func TestMarkFavorite(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/tags", nil)
+	buf := new(bytes.Buffer)
+	type RequestBody struct {
+		Unmark bool `json:"unmark"`
+	}
+	var body = &RequestBody{true}
+	json.NewEncoder(buf).Encode(&body)
+	request, _ := http.NewRequest("POST", "/favorite/topic/2/mark", buf)
+	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -169,11 +178,11 @@ func TestMarkFavorite(t *testing.T) {
 	}
 
 	fmt.Println(writer.Body)
-
 }
 
 func TestCheckFavorite(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/tags", nil)
+	request, _ := http.NewRequest("GET", "/favorite/topic/2", nil)
+	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -184,5 +193,73 @@ func TestCheckFavorite(t *testing.T) {
 
 }
 
+func TestMarkLike(t *testing.T) {
+	buf := new(bytes.Buffer)
+	type RequestBody struct {
+		Unmark bool `json:"unmark"`
+	}
+	var body = &RequestBody{true}
+	json.NewEncoder(buf).Encode(&body)
+	request, _ := http.NewRequest("POST", "/like/topic/2/mark", buf)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+}
+
+func TestCheckLike(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/like/topic/2", nil)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
 
 // MARK: Comment
+
+func TestListComment(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/comments/1", nil)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestReplyComment(t *testing.T) {
+	request, _ := http.NewRequest("POST", "/comment/1/reply", nil)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestRevokeComment(t *testing.T) {
+	request, _ := http.NewRequest("POST", "/comment/1/revoke", nil)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}

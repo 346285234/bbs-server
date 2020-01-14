@@ -1,4 +1,5 @@
 TODO:
+- [x] add check favorite and like api.
 - [ ] rest api request and response.
 - [ ] database optimize.
 - [ ] cache.

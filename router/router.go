@@ -86,6 +86,21 @@ var routes = Routes{
 		Path:    "/categories",
 		Handler: handler.CaH.ListCategory,
 	},
+	Route{
+		Method:  "GET",
+		Path:    "/comments/:topic_id",
+		Handler: handler.Ch.List,
+	},
+	Route{
+		Method:  "POST",
+		Path:    "/comment/:topic_id/reply",
+		Handler: checkLogin(handler.Ch.Reply),
+	},
+	Route{
+		Method:  "POST",
+		Path:    "/comment/:topic_id/revoke",
+		Handler: checkLogin(handler.Ch.Revoke),
+	},
 }
 
 func NewRouter() *mux.Router {

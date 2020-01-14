@@ -16,4 +16,10 @@ func (_ *likeService) Mark(like models.TopicLike, isMark bool) (err error) {
 	} else {
 		return operations.Lo.Remove(like)
 	}
+	// Update topic like count.
+}
+
+func (_ *likeService) Check(like models.TopicLike) (err error) {
+	_, err = operations.Lo.Get(like.UserID, like.TopicID)
+	return err
 }
