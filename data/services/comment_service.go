@@ -10,12 +10,12 @@ type commentService struct {
 
 var Cos = commentService{}
 
-func (_ *commentService) List(topicID uint) (comments []models.Comment, err error) {
+func (_ *commentService) List(topicID uint) (comments []*models.Comment, err error) {
 	return operations.CoO.List(topicID)
 }
 
-func (_ *commentService) Add(topicID uint, parentID uint, content string) (err error) {
-	return operations.CoO.Add(topicID, parentID, content)
+func (_ *commentService) Reply(comment models.Comment, parentID uint) (*models.Comment, error) {
+	return operations.CoO.Add(comment, parentID)
 }
 
 func (_ *commentService) Revoke(topicID uint, id uint) (err error) {

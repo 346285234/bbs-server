@@ -14,7 +14,7 @@ type favoriteHanlder struct {
 
 var FaH = favoriteHanlder{}
 
-func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
+func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{},*models.AppError) {
 
 	topicID := uint(common.StrToInt(p.ByName("topic_id")))
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
@@ -33,25 +33,13 @@ func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p
 	err := services.Fs.Mark(favorite, !body.Unmark)
 
 	if err != nil {
-		return models.NewAppError(err)
+		return nil, models.NewAppError(err)
 	}
 
-	// Set response.
-	var response models.Response
-	response = models.Response{Success: true, Code: 200, Message: "OK"}
-
-	bytes, err := json.Marshal(response)
-
-	if err != nil {
-		return models.NewAppError(err)
-	}
-
-	w.Write(bytes)
-
-	return nil
+	return nil, nil
 }
 
-func (_ *favoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
+func (_ *favoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{},*models.AppError) {
 	topicID := uint(common.StrToInt(p.ByName("topic_id")))
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
 
@@ -70,15 +58,5 @@ func (_ *favoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, 
 		IsMark bool `json:"is_mark"`
 	}{isMark}
 
-	// Set response.
-	var response models.Response
-	response = models.Response{true, 200, "OK", data}
-	bytes, err := json.Marshal(response)
-	if err != nil {
-		return models.NewAppError(err)
-	}
-
-	w.Write(bytes)
-
-	return nil
+	return data, nil
 }

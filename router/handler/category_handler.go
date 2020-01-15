@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"github.com/346285234/bbs-server/data/models"
 	"github.com/346285234/bbs-server/data/services"
 	"github.com/julienschmidt/httprouter"
@@ -13,12 +12,12 @@ type categoryHandler struct {
 
 var CaH = categoryHandler{}
 
-func (_ *categoryHandler) ListCategory(w http.ResponseWriter, r *http.Request, p httprouter.Params) *models.AppError {
+func (_ *categoryHandler) ListCategory(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{},*models.AppError) {
 	// Get data.
 	categories, err := services.Cs.Categories()
 
 	if err != nil {
-		return models.NewAppError(err)
+		return nil, models.NewAppError(err)
 	}
 
 	// Set response.
@@ -36,12 +35,5 @@ func (_ *categoryHandler) ListCategory(w http.ResponseWriter, r *http.Request, p
 		values[i] = value
 	}
 	data := Data{len(values), values}
-	response := models.Response{true, 200, "OK", data}
-	bytes, err := json.Marshal(response)
-	if err != nil {
-		return models.NewAppError(err)
-	}
-	w.Write(bytes)
-
-	return nil
+	return data, nil
 }

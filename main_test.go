@@ -239,7 +239,14 @@ func TestListComment(t *testing.T) {
 }
 
 func TestReplyComment(t *testing.T) {
-	request, _ := http.NewRequest("POST", "/comment/1/reply", nil)
+	comment := struct {
+		ParentID int `json:"parent_id"`
+		Content string
+	}{1, "first sub comment"}
+	buf := new(bytes.Buffer)
+	json.NewEncoder(buf).Encode(&comment)
+
+	request, _ := http.NewRequest("POST", "/comment/1/reply", buf)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 

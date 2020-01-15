@@ -10,7 +10,7 @@ import (
 
 
 
-type errorHandler func(http.ResponseWriter, *http.Request, mux.Params) *models.AppError
+type errorHandler func(http.ResponseWriter, *http.Request, mux.Params) (interface{}, *models.AppError)
 
 type Route struct {
 	Method  string
@@ -114,21 +114,29 @@ func NewRouter() *mux.Router {
 
 func checkError(fn errorHandler) mux.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p mux.Params) {
-		if err := fn(w, r, p); err != nil {
-			res := models.Response{Success: false, Code: err.Code, Message: err.Message}
-			bytes, _ := json.Marshal(res)
-			w.WriteHeader(err.Code)
-			w.Write(bytes)
+		var response models.Response
+
+		data, err := fn(w, r, p)
+		if data == nil {
+			data = make(map[string]interface{})
 		}
+		if err != nil {
+			response = models.Response{false, err.Code, err.Message, data}
+		} else {
+			response = models.Response{true, 200, "OK", data}
+		}
+
+		bytes, _ := json.Marshal(response)
+		w.Write(bytes)
 	}
 }
 
-func checkLogin(fn func(w http.ResponseWriter, r *http.Request, p mux.Params) *models.AppError) errorHandler {
-	return func(w http.ResponseWriter, r *http.Request, p mux.Params) *models.AppError {
+func checkLogin(fn errorHandler) errorHandler {
+	return func(w http.ResponseWriter, r *http.Request, p mux.Params) (interface{}, *models.AppError) {
 		if err := checkUser(); err == nil {
 			return fn(w, r, p)
 		} else {
-			return models.NewAppError(err)
+			return nil, models.NewAppError(err)
 		}
 	}
 }

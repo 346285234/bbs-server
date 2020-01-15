@@ -10,7 +10,7 @@ const (
 	Markdown EditType = 1
 )
 
-var Models = []interface{}{&Topic{}, &Category{}, &Tag{}, &TopicFavorite{}, &TopicLike{}}
+var Models = []interface{}{&Topic{}, &Category{}, &Tag{}, &TopicFavorite{}, &TopicLike{}, &Comment{}}
 
 type Topic struct {
 	gorm.Model
@@ -58,12 +58,11 @@ type Category struct {
 
 type Comment struct {
 	gorm.Model
+	TopicID uint
 	AuthorID uint
 	Content string
 	LikeCount uint
-	Children []Comment `gorm:"foreignkey:Parent"` // has many
-	Parent uint
-	TopicID uint
+	Subs []*Comment `gorm:"many2many:subcomments;association_jointable_foreignkey:sub_id"`
 }
 
 //type CommentLike struct {

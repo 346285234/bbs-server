@@ -45,7 +45,7 @@
 
 ```json
 {
-  "parent_id": -1,
+  "parent_id": 0, // 0: no parent
   "content": "x",
 }
 ```
@@ -69,7 +69,7 @@
 
 
 
-### Revoke comment
+### // Revoke comment
 
 * **URL:** /comment/:topic_id/revoke
 * **method:** POST
