@@ -14,16 +14,18 @@ func newTagOperation() *tagOperation {
 	return &tagOperation{}
 }
 
-func (_ *tagOperation) List() (tags []models.Tag, err error) {
-	if err := data.Db.Find(&tags).Error; err != nil {
-		return nil, err
-	}
-
-	return tags, nil
+func (_ *tagOperation) List() (tags []*models.Tag, err error) {
+	err = data.Db.Find(&tags).Error
+	return
 }
 
-func (_ *tagOperation) add(tag models.Tag) (err error) {
-	return data.Db.Create(&tag).Error
+func (_ *tagOperation) Add(tag *models.Tag) (err error) {
+	if err := data.Db.Where("user_id = ? AND value = ?", tag.UserID, tag.Value).
+		First(&tag).Error; err != nil {
+		return data.Db.Create(tag).Error
+	}
+
+	return nil
 }
 
 func (_ *tagOperation) remove(id uint) (err error) {

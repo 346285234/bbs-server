@@ -10,7 +10,7 @@ type likeOperation struct {
 
 var Lo = &likeOperation{}
 
-func (_ *likeOperation) List() (like []models.TopicLike, err error) {
+func (_ *likeOperation) List() (like []models.Like, err error) {
 	if err := data.Db.Find(&like).Error; err != nil {
 		return nil, err
 	}
@@ -18,9 +18,10 @@ func (_ *likeOperation) List() (like []models.TopicLike, err error) {
 	return like, nil
 }
 
-func (_ *likeOperation) Get(userID uint, topicID uint) (like *models.TopicLike, err error) {
-	var result models.TopicLike
-	if err := data.Db.Where("user_id = ? AND topic_id = ?", userID, topicID).
+func (_ *likeOperation) Get(like models.Like) (*models.Like, error) {
+	var result models.Like
+	if err := data.Db.Where("object_type = ? AND object_id = ? AND user_id = ?",
+		like.ObjectType, like.ObjectID, like.UserID).
 		First(&result).Error; err != nil {
 		return nil, err
 	}
@@ -28,11 +29,11 @@ func (_ *likeOperation) Get(userID uint, topicID uint) (like *models.TopicLike, 
 	return &result, nil
 }
 
-func (_ *likeOperation) Add(like models.TopicLike) (err error) {
+func (_ *likeOperation) Add(like models.Like) (err error) {
 	return data.Db.Create(&like).Error
 }
 
-func (_ *likeOperation) Remove(like models.TopicLike) (err error) {
-	return data.Db.Where("topic_id = ? AND user_id = ?", like.TopicID, like.UserID).
-		Delete(&models.TopicLike{}).Error
+func (_ *likeOperation) Remove(like models.Like) (err error) {
+	return data.Db.Where("object_type = ? AND object_id = ? AND user_id = ?", like.ObjectType, like.ObjectID, like.UserID).
+		Delete(&models.Like{}).Error
 }

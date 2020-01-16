@@ -22,8 +22,8 @@ func (_ *categoryOperation) List() (categories []models.Category, err error) {
 	return categories, nil
 }
 
-func (_ *categoryOperation) add(category models.Category) (err error) {
-	return data.Db.Create(&category).Error
+func (_ *categoryOperation) add(category *models.Category) (err error) {
+	return data.Db.Create(category).Error
 }
 
 func (_ *categoryOperation) remove(id uint) (err error) {

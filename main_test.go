@@ -57,35 +57,31 @@ func TestGetTopic(t *testing.T) {
 
 func TestAddTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
-	type Tag struct {
-		Id uint
-		Value string
-	}
 	type RequestBody struct {
-		Title      string
-		Content    string
-		CategoryID uint `json:"category_id"`
-		Tags       []Tag
+		Title      string        `json:"title"`
+		Content    string        `json:"content"`
+		CategoryID uint          `json:"category_id"`
+		Tags       []string      `json:"tags"`
 		EditTime   time.Duration `json:"edit_time"`
 		IsPaste    bool          `json:"is_paste"`
-		EditType   int           `json:"edit_type"`
-		GroupID    int           `json:"group_id"`
+		EditType   uint          `json:"edit_type"`
+		GroupID    uint          `json:"group_id"`
 	}
-	body := &RequestBody{
-		Title:   "Qq",
-		Content: "hello world",
+	body := RequestBody{
+		Title:      "fifth topic",
+		Content:    "hello world!",
 		CategoryID: 1,
-		Tags: []Tag{Tag{1, "go"}, Tag{2, "test"}, Tag{Value:"new"}},
-		EditTime: time.Hour,
-		IsPaste:  true,
-		EditType: 1,
-		GroupID:  10,
+		Tags:       []string{"a", "b"},
+		EditTime:   time.Hour,
+		IsPaste:    true,
+		EditType:   1,
+		GroupID:    1,
 	}
-	json.NewEncoder(buf).Encode(&body)
-
+	json.NewEncoder(buf).Encode(body)
 	request, _ := http.NewRequest("POST", "/topic/add", buf)
 
-	request.Header.Add("userID", string(userID))
+	request.Header.Add("userID", userID)
+
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -96,7 +92,7 @@ func TestAddTopic(t *testing.T) {
 
 func TestRemoveTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
-	body := map[string]int{"id": 3}
+	body := map[string]int{"id": 5}
 	json.NewEncoder(buf).Encode(&body)
 	request, _ := http.NewRequest("POST", "/topic/remove", buf)
 
@@ -109,6 +105,7 @@ func TestRemoveTopic(t *testing.T) {
 	fmt.Println(writer.Body)
 }
 
+// TODO: update topic api.
 func TestUpdateTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
 	type Body struct {
@@ -169,7 +166,7 @@ func TestMarkFavorite(t *testing.T) {
 	}
 	var body = &RequestBody{true}
 	json.NewEncoder(buf).Encode(&body)
-	request, _ := http.NewRequest("POST", "/favorite/topic/2/mark", buf)
+	request, _ := http.NewRequest("POST", "/favorite/topic/1/mark", buf)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
@@ -181,7 +178,7 @@ func TestMarkFavorite(t *testing.T) {
 }
 
 func TestCheckFavorite(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/favorite/topic/2", nil)
+	request, _ := http.NewRequest("GET", "/favorite/topic/1", nil)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
@@ -193,14 +190,14 @@ func TestCheckFavorite(t *testing.T) {
 
 }
 
-func TestMarkLike(t *testing.T) {
+func TestMarkLikeTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
 	type RequestBody struct {
 		Unmark bool `json:"unmark"`
 	}
 	var body = &RequestBody{true}
 	json.NewEncoder(buf).Encode(&body)
-	request, _ := http.NewRequest("POST", "/like/topic/2/mark", buf)
+	request, _ := http.NewRequest("POST", "/like/topic/1/mark", buf)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
@@ -211,8 +208,39 @@ func TestMarkLike(t *testing.T) {
 	fmt.Println(writer.Body)
 }
 
-func TestCheckLike(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/like/topic/2", nil)
+func TestCheckLikeTopic(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/like/topic/1", nil)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestMarkLikeComment(t *testing.T) {
+	buf := new(bytes.Buffer)
+	type RequestBody struct {
+		Unmark bool `json:"unmark"`
+	}
+	var body = &RequestBody{true}
+	json.NewEncoder(buf).Encode(&body)
+	request, _ := http.NewRequest("POST", "/like/comment/2/mark", buf)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+}
+
+func TestCheckLikeComment(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/like/comment/2", nil)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
@@ -241,8 +269,8 @@ func TestListComment(t *testing.T) {
 func TestReplyComment(t *testing.T) {
 	comment := struct {
 		ParentID int `json:"parent_id"`
-		Content string
-	}{1, "first sub comment"}
+		Content  string
+	}{0, "fourth comment"}
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(&comment)
 
@@ -258,6 +286,7 @@ func TestReplyComment(t *testing.T) {
 
 }
 
+// TODO: undo.
 func TestRevokeComment(t *testing.T) {
 	request, _ := http.NewRequest("POST", "/comment/1/revoke", nil)
 	request.Header.Add("userID", userID)

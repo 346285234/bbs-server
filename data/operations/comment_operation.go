@@ -10,27 +10,25 @@ type commentOperation struct {
 
 var CoO = commentOperation{}
 
-
 func (_ *commentOperation) List(topicID uint) (comments []*models.Comment, err error) {
 	if err := data.Db.Preload("Subs").Find(&comments).Error; err != nil {
 		return nil, err
 	}
 
-	// FIXME: better method to filter sub comment.
 	var subs = make(map[uint]bool)
-	for i, v := range comments {
+	for i := 0; i < len(comments); {
+		v := comments[i]
 		if subs[v.ID] {
 			// remove.
-			endIndex := len(comments)-1
-			comments[i] = comments[endIndex]
-			comments[endIndex] = nil
-			comments = comments[:endIndex]
+			comments = append(comments[:i], comments[i+1:]...)
+			continue
 		}
 		if len(v.Subs) != 0 {
 			for _, subV := range v.Subs {
 				subs[subV.ID] = true
 			}
 		}
+		i++
 	}
 	return comments, nil
 }
@@ -45,7 +43,7 @@ func (_ *commentOperation) Add(comment models.Comment, parentID uint) (*models.C
 	}
 
 	var parent models.Comment
-	if err := data.Db.First(&parent, parentID).Error;  err != nil {
+	if err := data.Db.First(&parent, parentID).Error; err != nil {
 		return nil, err
 	}
 	if err := data.Db.Model(&parent).Association("Subs").Append(&comment).Error; err != nil {

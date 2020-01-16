@@ -10,16 +10,19 @@ type likeService struct {
 
 var Ls = likeService{}
 
-func (_ *likeService) Mark(like models.TopicLike, isMark bool) (err error) {
+func (_ *likeService) Mark(like models.Like, isMark bool) error {
 	if isMark {
 		return operations.Lo.Add(like)
 	} else {
 		return operations.Lo.Remove(like)
 	}
-	// Update topic like count.
+	// Update like count.
 }
 
-func (_ *likeService) Check(like models.TopicLike) (err error) {
-	_, err = operations.Lo.Get(like.UserID, like.TopicID)
-	return err
+func (_ *likeService) Check(like models.Like) (bool, error) {
+	data, err := operations.Lo.Get(like)
+	if data == nil {
+		return false, err
+	}
+	return true, nil
 }

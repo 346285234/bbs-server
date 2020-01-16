@@ -10,7 +10,7 @@ type FavoriteService struct {
 
 var Fs = FavoriteService{}
 
-func (_ *FavoriteService) Mark(favorite models.TopicFavorite, isMark bool) (err error) {
+func (_ *FavoriteService) Mark(favorite models.Favorite, isMark bool) (err error) {
 	if isMark {
 		return operations.Fo.Add(favorite)
 	} else {
@@ -19,7 +19,10 @@ func (_ *FavoriteService) Mark(favorite models.TopicFavorite, isMark bool) (err 
 	// Update favorite count.
 }
 
-func (_ *FavoriteService) Check(favorite models.TopicFavorite) (err error) {
-	_, err = operations.Fo.Get(favorite.UserID, favorite.TopicID)
-	return err
+func (_ *FavoriteService) Check(favorite models.Favorite) (bool, error) {
+	data, err := operations.Fo.Get(favorite)
+	if data == nil {
+		return false, err
+	}
+	return true, nil
 }

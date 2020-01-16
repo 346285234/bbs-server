@@ -17,17 +17,22 @@
     "comments": [
       {
         "id": 1,
-        "author": {"id": 1, "name": "x", "portrait": "x"},
+        "author_id": 1,
+        "author_name": "x",
+        "author_portrait": "x",
         "content": "x",
         "modify_time": 1111,
         "like_count": 1,
-        "subComment": [
+        "sub_comments": [
           {
             "id": 2,
-            "author": {"id": 1, "name": "x", "portrait": "x"},
+            "author_id": 1,
+    				"author_name": "x",
+    				"author_portrait": "x",
             "content": "x",
             "modify_time": 1111,
             "like_count": 1,
+            "sub_comments": [],
           }
         ],
       }
@@ -59,10 +64,13 @@
   "message": "OK",
   "data": {
     "id": 1,
-    "author": {"id": 1, "name": "x", "portrait": "x"},
+    "author_id": 1,
+    "author_name": "x",
+    "author_portrait": "x",
     "content": "x",
     "modify_time": 1111,
     "like_count": 0,
+    "sub_comments": [],
   },
 }
 ```

@@ -10,6 +10,6 @@ type tagService struct {
 
 var TagS = tagService{}
 
-func (_ *tagService) Tags() (categories []models.Tag, err error) {
+func (_ *tagService) Tags() (categories []*models.Tag, err error) {
 	return operations.TagO.List()
 }

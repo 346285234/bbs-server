@@ -14,11 +14,11 @@ type favoriteHanlder struct {
 
 var FaH = favoriteHanlder{}
 
-func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{},*models.AppError) {
+func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
 
 	topicID := uint(common.StrToInt(p.ByName("topic_id")))
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
-	var favorite models.TopicFavorite
+	var favorite models.Favorite
 	favorite.TopicID = topicID
 	favorite.UserID = userID
 
@@ -39,22 +39,16 @@ func (_ *favoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p
 	return nil, nil
 }
 
-func (_ *favoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{},*models.AppError) {
+func (_ *favoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
 	topicID := uint(common.StrToInt(p.ByName("topic_id")))
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
 
-	var favorite models.TopicFavorite
+	var favorite models.Favorite
 	favorite.TopicID = topicID
 	favorite.UserID = userID
 
-	err := services.Fs.Check(favorite)
-	var isMark bool
-	if err == nil {
-		isMark = true
-	} else {
-		isMark = false
-	}
-	var data = struct{
+	isMark, _ := services.Fs.Check(favorite)
+	var data = struct {
 		IsMark bool `json:"is_mark"`
 	}{isMark}
 

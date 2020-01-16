@@ -1,9 +1,10 @@
 TODO:
 - [x] add check favorite and like api.
-- [ ] rest api request and response.
-- [ ] database optimize.
+- [ ] topic update api.
+- [x] rest api request and response.
+- [ ] code optimize.
 - [ ] cache.
-- [ ] comment.
+- [x] comment.
 - [ ] pagination.
 - [ ] request using query.
 
@@ -12,7 +13,7 @@ TODO:
 2020.1.10
 
 - [x] rest api: category resquest category_id, response categroy_id and category_name.
-- [ ] rest api: adjust url and test.
+- [x] rest api: adjust url and test.
 
 
 

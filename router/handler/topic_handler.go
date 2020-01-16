@@ -16,58 +16,69 @@ type topicHandler struct {
 var Th = topicHandler{}
 
 func (_ *topicHandler) ListTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
-	// TODO: Analyse query.
+	// TODO: request.
 
-	// Get data.
+	// db.
 	topics, err := services.Ts.Topics()
-
 	if err != nil {
 		return nil, models.NewAppError(err)
 	}
 
+	// response.
+	topicsResponse := make([]models.TopicResponse, len(topics))
+	for i, v := range topics {
+		topicResponse := common.TopicToResponse(v)
+		topicsResponse[i] = topicResponse
+	}
+
 	data := struct {
-		Total  int            `json:"total"`
-		Topics []models.Topic `json:"topics"`
-	}{len(topics), topics}
+		Total  int                    `json:"total"`
+		Topics []models.TopicResponse `json:"topics"`
+	}{len(topicsResponse), topicsResponse}
 	return data, nil
 }
 
 func (_ *topicHandler) GetTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
 
-	// Get id.
+	// request.
 	id := uint(common.StrToInt(p.ByName("id")))
 
-	// Get data.
+	// db.
 	topic, err := services.Ts.GetTopic(id)
-
 	if err != nil {
 		return nil, models.NewAppError(err)
 	}
 
-	return topic, nil
+	// response.
+	topicResponse := common.TopicToResponse(*topic)
+	return topicResponse, nil
 }
 
 func (_ *topicHandler) AddTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
-	// Analyse response.
-
-	var topic models.Topic
-	json.NewDecoder(r.Body).Decode(&topic)
-	defer r.Body.Close()
+	// request.
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
+
+	var topicRequest models.TopicRequest
+	json.NewDecoder(r.Body).Decode(&topicRequest)
+	defer r.Body.Close()
+
+	topic := common.RequestToTopic(topicRequest)
 	topic.UserID = userID
 
-	//Add data.
-	err := services.Ts.AddTopic(topic)
+	// db.
+	err := services.Ts.AddTopic(&topic)
 
 	if err != nil {
 		return nil, models.NewAppError(err)
 	}
 
-	return nil, nil
+	// response.
+	data := common.TopicToResponse(topic)
+	return data, nil
 }
 
 func (_ *topicHandler) RemoveTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
-	// Get id.
+	// request.
 	var body map[string]int
 	json.NewDecoder(r.Body).Decode(&body)
 	defer r.Body.Close()
@@ -80,27 +91,34 @@ func (_ *topicHandler) RemoveTopic(w http.ResponseWriter, r *http.Request, p htt
 	topicID := uint(id)
 	userID := uint(common.StrToInt(r.Header.Get("userID")))
 
+	// db.
 	err := services.Ts.RemoveTopic(userID, topicID)
-
 	if err != nil {
 		return nil, models.NewAppError(err)
 	}
 
+	// response.
 	return nil, nil
 }
 
-func (_ *topicHandler) UpdateTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{},*models.AppError) {
-	var topic models.Topic
-	json.NewDecoder(r.Body).Decode(&topic)
+func (_ *topicHandler) UpdateTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
+	// request.
+	userID := uint(common.StrToInt(r.Header.Get("userID")))
+
+	var topicRequest models.TopicRequest
+	json.NewDecoder(r.Body).Decode(&topicRequest)
 	defer r.Body.Close()
-	userID := r.Header.Get("userID")
-	topic.UserID = uint(common.StrToInt(userID))
 
-	err := services.Ts.AddTopic(topic)
+	topic := common.RequestToTopic(topicRequest)
+	topic.UserID = userID
+
+	// db.
+	err := services.Ts.UpdateTopic(&topic)
 	if err != nil {
 		return nil, models.NewAppError(err)
 	}
 
-	return nil, nil
+	// response.
+	data := common.TopicToResponse(topic)
+	return data, nil
 }
-

@@ -10,7 +10,7 @@ type favoriteOperation struct {
 
 var Fo = &favoriteOperation{}
 
-func (_ *favoriteOperation) List() (favorites []models.TopicFavorite, err error) {
+func (_ *favoriteOperation) List() (favorites []models.Favorite, err error) {
 	if err := data.Db.Find(&favorites).Error; err != nil {
 		return nil, err
 	}
@@ -18,9 +18,9 @@ func (_ *favoriteOperation) List() (favorites []models.TopicFavorite, err error)
 	return favorites, nil
 }
 
-func (_ *favoriteOperation) Get(userID uint, topicID uint) (favorite *models.TopicFavorite, err error) {
-	var result models.TopicFavorite
-	if err := data.Db.Where("user_id = ? AND topic_id = ?", userID, topicID).
+func (_ *favoriteOperation) Get(favorite models.Favorite) (*models.Favorite, error) {
+	var result models.Favorite
+	if err := data.Db.Where("user_id = ? AND topic_id = ?", favorite.UserID, favorite.TopicID).
 		First(&result).Error; err != nil {
 		return nil, err
 	}
@@ -28,11 +28,11 @@ func (_ *favoriteOperation) Get(userID uint, topicID uint) (favorite *models.Top
 	return &result, nil
 }
 
-func (_ *favoriteOperation) Add(favorite models.TopicFavorite) (err error) {
+func (_ *favoriteOperation) Add(favorite models.Favorite) (err error) {
 	return data.Db.Create(&favorite).Error
 }
 
-func (_ *favoriteOperation) Remove(favorite models.TopicFavorite) (err error) {
+func (_ *favoriteOperation) Remove(favorite models.Favorite) (err error) {
 	return data.Db.Where("topic_id = ? AND user_id = ?", favorite.TopicID, favorite.UserID).
-		Delete(&models.TopicFavorite{}).Error
+		Delete(&models.Favorite{}).Error
 }

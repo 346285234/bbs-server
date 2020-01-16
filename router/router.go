@@ -8,8 +8,6 @@ import (
 	"net/http"
 )
 
-
-
 type errorHandler func(http.ResponseWriter, *http.Request, mux.Params) (interface{}, *models.AppError)
 
 type Route struct {
@@ -59,22 +57,22 @@ var routes = Routes{
 	Route{
 		Method:  "POST",
 		Path:    "/like/topic/:topic_id/mark",
-		Handler: checkLogin(handler.LiH.MarkLike),
+		Handler: checkLogin(handler.LiH.MarkLikeTopic),
 	},
 	Route{
 		Method:  "POST",
 		Path:    "/like/comment/:comment_id/mark",
-		Handler: checkLogin(handler.LiH.MarkLike),
+		Handler: checkLogin(handler.LiH.MarkLikeComment),
 	},
 	Route{
 		Method:  "GET",
 		Path:    "/like/topic/:topic_id",
-		Handler: checkLogin(handler.LiH.CheckLike),
+		Handler: checkLogin(handler.LiH.CheckLikeTopic),
 	},
 	Route{
 		Method:  "GET",
 		Path:    "/like/comment/:comment_id",
-		Handler: checkLogin(handler.LiH.CheckLike),
+		Handler: checkLogin(handler.LiH.CheckLikeComment),
 	},
 	Route{
 		Method:  "GET",

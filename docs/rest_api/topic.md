@@ -5,6 +5,8 @@ Missing page.
 
 user info: ["userID": 1, ]
 
+"image_url": "x",
+
 ### List topics
 
 * **URL:** /topics?hot=true&group_id=1
@@ -47,9 +49,11 @@ user info: ["userID": 1, ]
         "tag": ["a", "b"],
         "category_id": 1,
         "category_name": "x",
-        "author": {"id": 1, "name": "x", "portrait": "x"},
+        "author_id": 1,
+        "author_name": "x",
+        "author_portrait": "x",
         "description": "x",
-        "image_url": "x",
+        "content": "", // no content
         "modify_time": 1111,
         "favourite_count": 1,
         "like_count": 1,
@@ -78,7 +82,9 @@ user info: ["userID": 1, ]
     "tag": ["a", "b"],
     "category_id": 1,
     "category_name": "x",
-    "author": {"id": 1, "name": "x", "portrait": "x"},
+    "author_id": 1,
+    "author_name": "x",
+    "author_portrait": "x",
     "description": "x",
     "content": "x",
     "modify_time": 1111,
@@ -124,7 +130,9 @@ user info: ["userID": 1, ]
     "tags": ["a", "b"],
     "category_id": 1,
     "category_name": "x",
-    "author": {"id": 1, "name": "x", "portrait": "x"},
+    "author_id": 1,
+    "author_name": "x",
+    "author_portrait": "x",
     "description": "x",
     "content": "x",
     "modify_time": 1111,
@@ -170,13 +178,14 @@ user info: ["userID": 1, ]
 {
   "id": 1,
   "title": "x",
-  "tag": ["a", "b"],
-  "category_id": 1,
   "content": "x",
+  "category_id": 1,
+  "tag": ["a", "b"],
   // future use.
   "edit_time": 1111, // edit use how many time
   "is_paste": true,
-  "edit_type":1, // markdown or...
+  "edit_type": 1, // markdown or...
+  "group_id": 1,
 }
 ```
 
@@ -194,7 +203,9 @@ user info: ["userID": 1, ]
     "tag": ["a", "b"],
     "category_id": 1,
     "category_name": "x",
-    "author": {"id": 1, "name": "x", "portrait": "x"},
+    "author_id": 1,
+    "author_name": "x",
+    "author_portrait": "x",
     "description": "x",
     "content": "x",
     "modify_time": 1111,
