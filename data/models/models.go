@@ -16,17 +16,17 @@ const (
 
 type Topic struct {
 	gorm.Model
-	UserID   uint
-	Title    string
-	Content  string
-	Intro    string
-	GroupID  uint
-	IsPaste  bool
-	EditTime time.Duration
-	EditType uint
-	//Comments []Comment // has many
-	Tags           []*Tag   `gorm:"many2many:topic_tags;"` // many to many
-	Category       Category // belong to
+	UserID         uint
+	Title          string
+	Content        string
+	Intro          string
+	GroupID        uint
+	IsPaste        bool
+	EditTime       time.Duration
+	EditType       uint
+	Comments       []Comment // has many
+	Tags           []*Tag    `gorm:"many2many:topic_tags;"` // many to many
+	Category       Category  // belong to
 	CategoryID     uint
 	FavoritesCount uint
 	LikeCount      uint

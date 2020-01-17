@@ -33,6 +33,15 @@ func (_ *commentOperation) List(topicID uint) (comments []*models.Comment, err e
 	return comments, nil
 }
 
+func (_ *commentOperation) Get(id uint) (*models.Comment, error) {
+	var result models.Comment
+	if err := data.Db.Where("id = ?", id).First(&result).Error; err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
 func (_ *commentOperation) Add(comment models.Comment, parentID uint) (*models.Comment, error) {
 	if err := data.Db.Create(&comment).Error; err != nil {
 		return nil, err
@@ -60,4 +69,8 @@ func (_ *commentOperation) Remove(topicID uint, id uint) (err error) {
 	//}
 
 	return nil
+}
+
+func (_ *commentOperation) Update(comment *models.Comment) error {
+	return data.Db.Save(comment).Error
 }

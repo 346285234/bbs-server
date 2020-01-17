@@ -11,12 +11,21 @@ type FavoriteService struct {
 var Fs = FavoriteService{}
 
 func (_ *FavoriteService) Mark(favorite models.Favorite, isMark bool) (err error) {
+	// Change favorite table.
 	if isMark {
-		return operations.Fo.Add(favorite)
+		err = operations.Fo.Add(favorite)
 	} else {
-		return operations.Fo.Remove(favorite)
+		err = operations.Fo.Remove(favorite)
 	}
-	// Update favorite count.
+	// Update topic favorite count.
+	topic, err := operations.To.Get(favorite.TopicID)
+	if isMark {
+		topic.FavoritesCount++
+	} else {
+		topic.FavoritesCount--
+	}
+	operations.To.Update(topic)
+	return
 }
 
 func (_ *FavoriteService) Check(favorite models.Favorite) (bool, error) {

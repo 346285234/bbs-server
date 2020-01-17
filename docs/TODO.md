@@ -1,12 +1,13 @@
 TODO:
 - [x] add check favorite and like api.
-- [ ] topic update api.
+- [x] topic update api.
 - [x] rest api request and response.
+- [x] logic, post action may change multiple table
 - [ ] code optimize.
 - [ ] cache.
 - [x] comment.
-- [ ] pagination.
-- [ ] request using query.
+- [ ] list: query.
+- [ ] list: page and page size.
 
 
 

@@ -34,20 +34,25 @@ func TopicToResponse(topic models.Topic) models.TopicResponse {
 	return response
 }
 
-func RequestToTopic(topicRequest models.TopicRequest) models.Topic {
-	tags := StringsToTags(topicRequest.Tags)
+func RequestToTopic(topicRequest models.TopicRequest, userID uint) models.Topic {
+	tags := StringsToTags(topicRequest.Tags, userID)
 	topic := models.Topic{Title: topicRequest.Title, Content: topicRequest.Content,
 		CategoryID: topicRequest.CategoryID, Tags: tags,
 		EditTime: topicRequest.EditTime, IsPaste: topicRequest.IsPaste,
 		EditType: topicRequest.EditType, GroupID: topicRequest.GroupID,
+		UserID: userID,
 	}
+	if topicRequest.ID != 0 {
+		topic.ID = topicRequest.ID
+	}
+
 	return topic
 }
 
-func StringsToTags(strings []string) []*models.Tag {
+func StringsToTags(strings []string, userID uint) []*models.Tag {
 	tags := make([]*models.Tag, len(strings))
 	for i, v := range strings {
-		tags[i] = &models.Tag{Value: v}
+		tags[i] = &models.Tag{UserID: userID, Value: v}
 	}
 	return tags
 }

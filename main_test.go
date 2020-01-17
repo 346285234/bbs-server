@@ -33,7 +33,7 @@ func setup() {
 // MARK: Topic.
 
 func TestListTopic(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/topics", nil)
+	request, _ := http.NewRequest("GET", "/topics?user_id=1&category_id=1", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -45,7 +45,7 @@ func TestListTopic(t *testing.T) {
 }
 
 func TestGetTopic(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/topic/1", nil)
+	request, _ := http.NewRequest("GET", "/topic/2", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -68,7 +68,7 @@ func TestAddTopic(t *testing.T) {
 		GroupID    uint          `json:"group_id"`
 	}
 	body := RequestBody{
-		Title:      "fifth topic",
+		Title:      "sixth topic",
 		Content:    "hello world!",
 		CategoryID: 1,
 		Tags:       []string{"a", "b"},
@@ -92,7 +92,7 @@ func TestAddTopic(t *testing.T) {
 
 func TestRemoveTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
-	body := map[string]int{"id": 5}
+	body := map[string]int{"id": 3}
 	json.NewEncoder(buf).Encode(&body)
 	request, _ := http.NewRequest("POST", "/topic/remove", buf)
 
@@ -105,18 +105,30 @@ func TestRemoveTopic(t *testing.T) {
 	fmt.Println(writer.Body)
 }
 
-// TODO: update topic api.
 func TestUpdateTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
-	type Body struct {
-		ID      int    `json:"id"`
-		Title   string `json:"title""`
-		Content string `json:"content"`
+	type TopicRequest struct {
+		ID         uint
+		Title      string
+		Content    string
+		CategoryID uint `json:"category_id"`
+		Tags       []string
+		EditTime   time.Duration `json:"edit_time"`
+		IsPaste    bool          `json:"is_paste"`
+		EditType   uint          `json:"edit_type"`
+		GroupID    uint          `json:"group_id"`
 	}
-	body := &Body{
-		ID:      1,
-		Title:   "first",
-		Content: "update content",
+
+	body := &TopicRequest{
+		ID:         2,
+		Title:      "update first",
+		Content:    "hello",
+		CategoryID: 3,
+		Tags:       []string{"a", "g"},
+		EditTime:   time.Minute,
+		IsPaste:    true,
+		EditType:   1,
+		GroupID:    10,
 	}
 	json.NewEncoder(buf).Encode(&body)
 
@@ -164,9 +176,9 @@ func TestMarkFavorite(t *testing.T) {
 	type RequestBody struct {
 		Unmark bool `json:"unmark"`
 	}
-	var body = &RequestBody{true}
+	var body = &RequestBody{false}
 	json.NewEncoder(buf).Encode(&body)
-	request, _ := http.NewRequest("POST", "/favorite/topic/1/mark", buf)
+	request, _ := http.NewRequest("POST", "/favorite/topic/2/mark", buf)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 

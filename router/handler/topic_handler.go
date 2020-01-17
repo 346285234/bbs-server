@@ -18,8 +18,25 @@ var Th = topicHandler{}
 func (_ *topicHandler) ListTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *models.AppError) {
 	// TODO: request.
 
+	vars := r.URL.Query()
+
+	query := make(map[string]interface{})
+	groupID := uint(common.StrToInt(vars.Get("group_id")))
+	if groupID != 0 {
+		query["group_id"] = groupID
+	}
+	userID := uint(common.StrToInt(vars.Get("user_id")))
+	if userID != 0 {
+		query["user_id"] = userID
+	}
+	categoryID := uint(common.StrToInt(vars.Get("category_id")))
+	if categoryID != 0 {
+		query["category_id"] = categoryID
+	}
+	//tag := vars.Get("tag")
+
 	// db.
-	topics, err := services.Ts.Topics()
+	topics, err := services.Ts.Topics(query)
 	if err != nil {
 		return nil, models.NewAppError(err)
 	}
@@ -62,8 +79,7 @@ func (_ *topicHandler) AddTopic(w http.ResponseWriter, r *http.Request, p httpro
 	json.NewDecoder(r.Body).Decode(&topicRequest)
 	defer r.Body.Close()
 
-	topic := common.RequestToTopic(topicRequest)
-	topic.UserID = userID
+	topic := common.RequestToTopic(topicRequest, userID)
 
 	// db.
 	err := services.Ts.AddTopic(&topic)
@@ -109,16 +125,15 @@ func (_ *topicHandler) UpdateTopic(w http.ResponseWriter, r *http.Request, p htt
 	json.NewDecoder(r.Body).Decode(&topicRequest)
 	defer r.Body.Close()
 
-	topic := common.RequestToTopic(topicRequest)
-	topic.UserID = userID
+	topic := common.RequestToTopic(topicRequest, userID)
 
 	// db.
-	err := services.Ts.UpdateTopic(&topic)
+	updated, err := services.Ts.UpdateTopic(topic)
 	if err != nil {
 		return nil, models.NewAppError(err)
 	}
 
 	// response.
-	data := common.TopicToResponse(topic)
+	data := common.TopicToResponse(*updated)
 	return data, nil
 }
