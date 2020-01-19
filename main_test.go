@@ -33,7 +33,7 @@ func setup() {
 // MARK: Topic.
 
 func TestListTopic(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/topics?user_id=1&category_id=1", nil)
+	request, _ := http.NewRequest("GET", "/topics?tag=h&page=1&page_size=1000", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -68,10 +68,10 @@ func TestAddTopic(t *testing.T) {
 		GroupID    uint          `json:"group_id"`
 	}
 	body := RequestBody{
-		Title:      "sixth topic",
+		Title:      "third topic",
 		Content:    "hello world!",
-		CategoryID: 1,
-		Tags:       []string{"a", "b"},
+		CategoryID: 2,
+		Tags:       []string{"a", "h"},
 		EditTime:   time.Hour,
 		IsPaste:    true,
 		EditType:   1,

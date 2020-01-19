@@ -38,7 +38,7 @@ func TestAdd(t *testing.T) {
 	}
 
 	for _, v := range categories {
-		err := Co.add(v)
+		err := Co.add(&v)
 		if err != nil {
 			t.Error(err)
 		}

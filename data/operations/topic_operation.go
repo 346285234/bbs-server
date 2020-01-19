@@ -15,12 +15,32 @@ func newTopicOperation() *topicOperation {
 }
 
 func (_ *topicOperation) List(query map[string]interface{}) (topics []models.Topic, err error) {
-	if err := data.Db.Preload("Tags").
-		Preload("Category").Where(query).
+	var db = data.Db
+	if v, ok := query["tag"]; ok {
+		delete(query, "tag")
+		db = db.Joins("join topic_tags on topics.id = topic_tags.topic_id "+
+			"join tags on topic_tags.tag_id = tags.id").
+			Where("tags.value = ?", v)
+	}
+
+	var page, pageSize uint
+	if _, ok := query["page"]; ok {
+		page, _ = query["page"].(uint)
+		pageSize, _ = query["page_size"].(uint)
+		delete(query, "page")
+		delete(query, "page_size")
+	}
+
+	db = db.Where(query)
+
+	if page != 0 && pageSize != 0 {
+		db = db.Offset((page - 1) * pageSize).Limit(pageSize)
+	}
+	if err := db.Preload("Tags").
+		Preload("Category").
 		Find(&topics).Error; err != nil {
 		return nil, err
 	}
-
 	return topics, nil
 }
 

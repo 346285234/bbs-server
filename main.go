@@ -5,9 +5,7 @@ import (
 	"github.com/346285234/bbs-server/common"
 	"github.com/346285234/bbs-server/data"
 	"github.com/346285234/bbs-server/router"
-	log "github.com/Sirupsen/logrus"
 	"net/http"
-	"os"
 	"testing"
 	"time"
 )
@@ -27,14 +25,14 @@ func init() {
 	common.LoadConfig(configPath)
 
 	// log.
-	file, err := os.OpenFile(common.Config.LogPath, os.O_CREATE|os.O_APPEND, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	log.SetOutput(file)
-	log.SetFormatter(&log.JSONFormatter{})
-	log.SetLevel(log.WarnLevel)
+	//file, err := os.OpenFile(common.Config.LogPath, os.O_CREATE|os.O_APPEND, 0644)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer file.Close()
+	//log.SetOutput(file)
+	//log.SetFormatter(&log.JSONFormatter{})
+	//log.SetLevel(log.WarnLevel)
 
 	data.OpenDB(common.Config.MySQLURL)
 }

@@ -33,7 +33,17 @@ func (_ *topicHandler) ListTopic(w http.ResponseWriter, r *http.Request, p httpr
 	if categoryID != 0 {
 		query["category_id"] = categoryID
 	}
-	//tag := vars.Get("tag")
+	page := uint(common.StrToInt(vars.Get("page")))
+	pageSize := uint(common.StrToInt(vars.Get("page_size")))
+	if page != 0 && pageSize != 0 {
+		query["page"] = page
+		query["page_size"] = pageSize
+	}
+
+	tag := vars.Get("tag")
+	if tag != "" {
+		query["tag"] = tag
+	}
 
 	// db.
 	topics, err := services.Ts.Topics(query)

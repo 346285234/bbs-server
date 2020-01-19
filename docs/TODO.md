@@ -3,11 +3,17 @@ TODO:
 - [x] topic update api.
 - [x] rest api request and response.
 - [x] logic, post action may change multiple table
-- [ ] code optimize.
 - [ ] cache.
 - [x] comment.
-- [ ] list: query.
-- [ ] list: page and page size.
+- [ ] log.
+
+
+
+2020.1.19
+
+- [x] list: query, like **tag**.
+- [x] list: page and page size.
+- [ ] code optimize.
 
 
 

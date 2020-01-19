@@ -50,7 +50,6 @@ type Tag struct {
 	gorm.Model
 	UserID uint
 	Value  string
-	Topics []*Topic `gorm:"many2many:topic_tags;"`
 }
 
 type Category struct {
