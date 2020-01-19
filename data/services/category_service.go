@@ -1,3 +1,6 @@
+/*
+Package services is used to operate data indirectly.
+*/
 package services
 
 import (

@@ -14,6 +14,7 @@ func newTopicOperation() *topicOperation {
 	return &topicOperation{}
 }
 
+// List topics using query.
 func (_ *topicOperation) List(query map[string]interface{}) (topics []models.Topic, err error) {
 	var db = data.Db
 	if v, ok := query["tag"]; ok {

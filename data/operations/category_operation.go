@@ -1,3 +1,4 @@
+// Package operations is used to operate db directly.
 package operations
 
 import (
