@@ -1,7 +1,7 @@
 package gorm
 
 import (
-	"github.com/346285234/bbs-server/pkg/models"
+	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/jinzhu/gorm"
 )
 
@@ -14,7 +14,7 @@ func NewTagService(db *gorm.DB) TagService {
 	return TagService{op}
 }
 
-func (t *TagService) Tags() (categories []*models.Tag, err error) {
+func (t *TagService) Tags() (categories []*bbs.Tag, err error) {
 	return t.op.list()
 }
 
@@ -26,12 +26,12 @@ func newTagOperation(db *gorm.DB) tagOperation {
 	return tagOperation{db}
 }
 
-func (t *tagOperation) list() (tags []*models.Tag, err error) {
+func (t *tagOperation) list() (tags []*bbs.Tag, err error) {
 	err = t.db.Find(&tags).Error
 	return
 }
 
-func (t *tagOperation) add(tag *models.Tag) (err error) {
+func (t *tagOperation) add(tag *bbs.Tag) (err error) {
 	if err := t.db.Where("user_id = ? AND value = ?", tag.UserID, tag.Value).
 		First(&tag).Error; err != nil {
 		return t.db.Create(tag).Error
@@ -41,5 +41,5 @@ func (t *tagOperation) add(tag *models.Tag) (err error) {
 }
 
 func (t *tagOperation) remove(id uint) (err error) {
-	return t.db.Where("id = ?", id).Delete(&models.Tag{}).Error
+	return t.db.Where("id = ?", id).Delete(&bbs.Tag{}).Error
 }

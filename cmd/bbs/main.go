@@ -26,7 +26,7 @@ func main() {
 
 	// Load config.
 	var configPath string
-	flag.StringVar(&configPath, "config", "./config.json", "setting config file path")
+	flag.StringVar(&configPath, "config", "./configs/config.json", "setting config file path")
 	flag.Parse()
 	configs.LoadConfig(configPath)
 
@@ -41,9 +41,26 @@ func main() {
 	//log.SetLevel(log.WarnLevel)
 
 	// Setting db.
-	gorm.Open("mysql", configs.Config.MySQLURL)
+	db := gorm.Open("mysql", configs.Config.MySQLURL)
 
-	r := router.NewRouter()
+	categoryService := gorm.NewCategoryService(db)
+	commentService := gorm.NewCommentService(db)
+	favoriteService := gorm.NewFavoriteService(db)
+	likeService := gorm.NewLikeService(db)
+	tagService := gorm.NewTagService(db)
+	topicService := gorm.NewTopicService(db)
+
+	categoryHandler := router.NewCategoryHandler(&categoryService)
+	commentHandler := router.NewCommentHandler(&commentService)
+	favoriteHandler := router.NewFavoriteHandler(&favoriteService)
+	likeHandler := router.NewLikeHandler(&likeService)
+	tagHandler := router.NewTagHandler(&tagService)
+	topicHandler := router.NewTopicHandler(&topicService)
+
+	handlers := []interface{}{categoryHandler, commentHandler, favoriteHandler, likeHandler,
+		tagHandler, topicHandler}
+
+	r := router.NewRouter(handlers)
 	server := &http.Server{
 		Addr:           configs.Config.Address,
 		Handler:        r,

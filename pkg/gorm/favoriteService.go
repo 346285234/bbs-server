@@ -1,7 +1,7 @@
 package gorm
 
 import (
-	"github.com/346285234/bbs-server/pkg/models"
+	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/jinzhu/gorm"
 )
 
@@ -14,7 +14,7 @@ func NewFavoriteService(db *gorm.DB) FavoriteService {
 	return FavoriteService{op}
 }
 
-func (f *FavoriteService) Mark(favorite models.Favorite, isMark bool) (err error) {
+func (f *FavoriteService) Mark(favorite bbs.Favorite, isMark bool) (err error) {
 	// Change favorite table.
 	if isMark {
 		err = f.op.add(favorite)
@@ -34,7 +34,7 @@ func (f *FavoriteService) Mark(favorite models.Favorite, isMark bool) (err error
 	return
 }
 
-func (f *FavoriteService) Check(favorite models.Favorite) (bool, error) {
+func (f *FavoriteService) Check(favorite bbs.Favorite) (bool, error) {
 	data, err := f.op.get(favorite)
 	if data == nil {
 		return false, err
@@ -50,7 +50,7 @@ func newFavoriteOperation(db *gorm.DB) favoriteOperation {
 	return favoriteOperation{db}
 }
 
-func (f *favoriteOperation) list() (favorites []models.Favorite, err error) {
+func (f *favoriteOperation) list() (favorites []bbs.Favorite, err error) {
 	if err := f.db.Find(&favorites).Error; err != nil {
 		return nil, err
 	}
@@ -58,8 +58,8 @@ func (f *favoriteOperation) list() (favorites []models.Favorite, err error) {
 	return favorites, nil
 }
 
-func (f *favoriteOperation) get(favorite models.Favorite) (*models.Favorite, error) {
-	var result models.Favorite
+func (f *favoriteOperation) get(favorite bbs.Favorite) (*bbs.Favorite, error) {
+	var result bbs.Favorite
 	if err := f.db.Where("user_id = ? AND topic_id = ?", favorite.UserID, favorite.TopicID).
 		First(&result).Error; err != nil {
 		return nil, err
@@ -68,11 +68,11 @@ func (f *favoriteOperation) get(favorite models.Favorite) (*models.Favorite, err
 	return &result, nil
 }
 
-func (f *favoriteOperation) add(favorite models.Favorite) (err error) {
+func (f *favoriteOperation) add(favorite bbs.Favorite) (err error) {
 	return f.db.Create(&favorite).Error
 }
 
-func (f *favoriteOperation) remove(favorite models.Favorite) (err error) {
+func (f *favoriteOperation) remove(favorite bbs.Favorite) (err error) {
 	return f.db.Where("topic_id = ? AND user_id = ?", favorite.TopicID, favorite.UserID).
-		Delete(&models.Favorite{}).Error
+		Delete(&bbs.Favorite{}).Error
 }

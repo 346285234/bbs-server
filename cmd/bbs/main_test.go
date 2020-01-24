@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/346285234/bbs-server/pkg/gorm"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -26,7 +27,25 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	r = router.NewRouter()
+	db := gorm.Open("mysql", "root:346285234@tcp(localhost)/bbs?parseTime=true")
+
+	categoryService := gorm.NewCategoryService(db)
+	commentService := gorm.NewCommentService(db)
+	favoriteService := gorm.NewFavoriteService(db)
+	likeService := gorm.NewLikeService(db)
+	tagService := gorm.NewTagService(db)
+	topicService := gorm.NewTopicService(db)
+
+	categoryHandler := router.NewCategoryHandler(&categoryService)
+	commentHandler := router.NewCommentHandler(&commentService)
+	favoriteHandler := router.NewFavoriteHandler(&favoriteService)
+	likeHandler := router.NewLikeHandler(&likeService)
+	tagHandler := router.NewTagHandler(&tagService)
+	topicHandler := router.NewTopicHandler(&topicService)
+
+	handlers := []interface{}{categoryHandler, commentHandler, favoriteHandler, likeHandler,
+		tagHandler, topicHandler}
+	r = router.NewRouter(handlers)
 	writer = httptest.NewRecorder()
 	flag.Parse()
 }

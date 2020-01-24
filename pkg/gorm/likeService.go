@@ -1,8 +1,7 @@
 package gorm
 
 import (
-	"github.com/346285234/bbs-server/data/operations"
-	"github.com/346285234/bbs-server/pkg/models"
+	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/jinzhu/gorm"
 )
 
@@ -15,14 +14,14 @@ func NewLikeService(db *gorm.DB) LikeService {
 	return LikeService{op}
 }
 
-func (l *LikeService) Mark(like models.Like, isMark bool) (err error) {
+func (l *LikeService) Mark(like bbs.Like, isMark bool) (err error) {
 	if isMark {
 		err = l.op.add(like)
 	} else {
 		err = l.op.remove(like)
 	}
 	// Update like count.
-	if like.ObjectType == models.TopicType {
+	if like.ObjectType == bbs.TopicType {
 		top := newTopicOperation(l.op.db)
 		topic, _ := top.get(like.ObjectID)
 		if isMark {
@@ -45,8 +44,8 @@ func (l *LikeService) Mark(like models.Like, isMark bool) (err error) {
 	return
 }
 
-func (_ *LikeService) Check(like models.Like) (bool, error) {
-	data, err := operations.Lo.Get(like)
+func (l *LikeService) Check(like bbs.Like) (bool, error) {
+	data, err := l.op.get(like)
 	if data == nil {
 		return false, err
 	}
@@ -61,7 +60,7 @@ func newLikeOperation(db *gorm.DB) likeOperation {
 	return likeOperation{db}
 }
 
-func (l *likeOperation) list() (like []models.Like, err error) {
+func (l *likeOperation) list() (like []bbs.Like, err error) {
 	if err := l.db.Find(&like).Error; err != nil {
 		return nil, err
 	}
@@ -69,8 +68,8 @@ func (l *likeOperation) list() (like []models.Like, err error) {
 	return like, nil
 }
 
-func (l *likeOperation) get(like models.Like) (*models.Like, error) {
-	var result models.Like
+func (l *likeOperation) get(like bbs.Like) (*bbs.Like, error) {
+	var result bbs.Like
 	if err := l.db.Where("object_type = ? AND object_id = ? AND user_id = ?",
 		like.ObjectType, like.ObjectID, like.UserID).
 		First(&result).Error; err != nil {
@@ -80,11 +79,11 @@ func (l *likeOperation) get(like models.Like) (*models.Like, error) {
 	return &result, nil
 }
 
-func (l *likeOperation) add(like models.Like) (err error) {
+func (l *likeOperation) add(like bbs.Like) (err error) {
 	return l.db.Create(&like).Error
 }
 
-func (l *likeOperation) remove(like models.Like) (err error) {
+func (l *likeOperation) remove(like bbs.Like) (err error) {
 	return l.db.Where("object_type = ? AND object_id = ? AND user_id = ?", like.ObjectType, like.ObjectID, like.UserID).
-		Delete(&models.Like{}).Error
+		Delete(&bbs.Like{}).Error
 }

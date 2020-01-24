@@ -1,4 +1,4 @@
-package models
+package bbs
 
 import "github.com/jinzhu/gorm"
 

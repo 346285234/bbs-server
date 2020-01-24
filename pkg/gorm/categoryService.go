@@ -1,7 +1,7 @@
 package gorm
 
 import (
-	"github.com/346285234/bbs-server/pkg/models"
+	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/jinzhu/gorm"
 )
 
@@ -14,7 +14,7 @@ func NewCategoryService(db *gorm.DB) CategoryService {
 	return CategoryService{op}
 }
 
-func (c *CategoryService) Categories() (categories []models.Category, err error) {
+func (c *CategoryService) Categories() (categories []bbs.Category, err error) {
 	return c.op.list()
 }
 
@@ -28,7 +28,7 @@ func newCategoryOperation(db *gorm.DB) categoryOperation {
 	return categoryOperation{db}
 }
 
-func (c *categoryOperation) list() (categories []models.Category, err error) {
+func (c *categoryOperation) list() (categories []bbs.Category, err error) {
 	if err := c.db.Find(&categories).Error; err != nil {
 		return nil, err
 	}
@@ -36,10 +36,10 @@ func (c *categoryOperation) list() (categories []models.Category, err error) {
 	return categories, nil
 }
 
-func (c *categoryOperation) add(category *models.Category) (err error) {
+func (c *categoryOperation) add(category *bbs.Category) (err error) {
 	return c.db.Create(category).Error
 }
 
 func (c *categoryOperation) remove(id uint) (err error) {
-	return c.db.Where("id = ?", id).Delete(&models.Category{}).Error
+	return c.db.Where("id = ?", id).Delete(&bbs.Category{}).Error
 }

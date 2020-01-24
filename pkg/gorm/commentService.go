@@ -1,7 +1,7 @@
 package gorm
 
 import (
-	"github.com/346285234/bbs-server/pkg/models"
+	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/jinzhu/gorm"
 )
 
@@ -14,11 +14,11 @@ func NewCommentService(db *gorm.DB) CommentService {
 	return CommentService{op}
 }
 
-func (c *CommentService) List(topicID uint) (comments []*models.Comment, err error) {
+func (c *CommentService) List(topicID uint) (comments []*bbs.Comment, err error) {
 	return c.op.list(topicID)
 }
 
-func (c *CommentService) Reply(comment models.Comment, parentID uint) (*models.Comment, error) {
+func (c *CommentService) Reply(comment bbs.Comment, parentID uint) (*bbs.Comment, error) {
 	return c.op.add(comment, parentID)
 }
 
@@ -34,7 +34,7 @@ func newCommentOperation(db *gorm.DB) commentOperation {
 	return commentOperation{db}
 }
 
-func (c *commentOperation) list(topicID uint) (comments []*models.Comment, err error) {
+func (c *commentOperation) list(topicID uint) (comments []*bbs.Comment, err error) {
 	if err := c.db.Preload("Subs").Find(&comments).Error; err != nil {
 		return nil, err
 	}
@@ -57,8 +57,8 @@ func (c *commentOperation) list(topicID uint) (comments []*models.Comment, err e
 	return comments, nil
 }
 
-func (c *commentOperation) get(id uint) (*models.Comment, error) {
-	var result models.Comment
+func (c *commentOperation) get(id uint) (*bbs.Comment, error) {
+	var result bbs.Comment
 	if err := c.db.Where("id = ?", id).First(&result).Error; err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (c *commentOperation) get(id uint) (*models.Comment, error) {
 	return &result, nil
 }
 
-func (c *commentOperation) add(comment models.Comment, parentID uint) (*models.Comment, error) {
+func (c *commentOperation) add(comment bbs.Comment, parentID uint) (*bbs.Comment, error) {
 	if err := c.db.Create(&comment).Error; err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (c *commentOperation) add(comment models.Comment, parentID uint) (*models.C
 		return &comment, nil
 	}
 
-	var parent models.Comment
+	var parent bbs.Comment
 	if err := c.db.First(&parent, parentID).Error; err != nil {
 		return nil, err
 	}
@@ -88,13 +88,13 @@ func (c *commentOperation) add(comment models.Comment, parentID uint) (*models.C
 }
 
 func (c *commentOperation) remove(topicID uint, id uint) (err error) {
-	//if err := data.Db.Where("user_id = ? AND id = ?", userID, topicID).Delete(&models.Topic{}).Error; err != nil {
+	//if err := data.Db.Where("user_id = ? AND id = ?", userID, topicID).Delete(&bbs.Topic{}).Error; err != nil {
 	//	return err
 	//}
 
 	return nil
 }
 
-func (c *commentOperation) update(comment *models.Comment) error {
+func (c *commentOperation) update(comment *bbs.Comment) error {
 	return c.db.Save(comment).Error
 }

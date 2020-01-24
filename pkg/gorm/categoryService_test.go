@@ -2,10 +2,9 @@ package gorm
 
 import (
 	"fmt"
+	"github.com/346285234/bbs-server/pkg/bbs"
 	"os"
 	"testing"
-
-	"github.com/346285234/bbs-server/pkg/models"
 )
 
 var co categoryOperation
@@ -37,9 +36,9 @@ func TestList(t *testing.T) {
 func TestAdd(t *testing.T) {
 	values := []string{"Music", "Comedy", "Film", "Entertainment", "Gaming", "Sports", "Tech",
 		"Beauty & Fashion", "News", "Health"}
-	var categories = make([]models.Category, len(values))
+	var categories = make([]bbs.Category, len(values))
 	for i, v := range values {
-		categories[i] = models.Category{Value: v}
+		categories[i] = bbs.Category{Value: v}
 	}
 
 	for _, v := range categories {

@@ -1,7 +1,7 @@
 package gorm
 
 import (
-	"github.com/346285234/bbs-server/pkg/models"
+	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/jinzhu/gorm"
 )
 
@@ -14,18 +14,18 @@ func NewTopicService(db *gorm.DB) TopicService {
 	return TopicService{op}
 }
 
-func (t *TopicService) Topics(query map[string]interface{}) (topics []models.Topic, err error) {
+func (t *TopicService) Topics(query map[string]interface{}) (topics []bbs.Topic, err error) {
 	return t.op.list(query)
 }
 
-func (t *TopicService) GetTopic(id uint) (topic *models.Topic, err error) {
+func (t *TopicService) GetTopic(id uint) (topic *bbs.Topic, err error) {
 	topic, err = t.op.get(id)
 	topic.ViewCount++
 	t.op.update(topic)
 	return
 }
 
-func (t *TopicService) AddTopic(topic *models.Topic) error {
+func (t *TopicService) AddTopic(topic *bbs.Topic) error {
 	// Add tag if not exist.
 	top := newTagOperation(t.op.db)
 	for _, tag := range topic.Tags {
@@ -45,7 +45,7 @@ func (t *TopicService) RemoveTopic(userID uint, topicID uint) (err error) {
 	return t.op.remove(topic)
 }
 
-func (t *TopicService) UpdateTopic(topic models.Topic) (*models.Topic, error) {
+func (t *TopicService) UpdateTopic(topic bbs.Topic) (*bbs.Topic, error) {
 	// Add tag if not exist.
 	top := newTagOperation(t.op.db)
 	for _, tag := range topic.Tags {
@@ -75,7 +75,7 @@ func newTopicOperation(db *gorm.DB) topicOperation {
 }
 
 // List topics using query.
-func (t *topicOperation) list(query map[string]interface{}) (topics []models.Topic, err error) {
+func (t *topicOperation) list(query map[string]interface{}) (topics []bbs.Topic, err error) {
 	var db = t.db
 	if v, ok := query["tag"]; ok {
 		delete(query, "tag")
@@ -105,16 +105,16 @@ func (t *topicOperation) list(query map[string]interface{}) (topics []models.Top
 	return topics, nil
 }
 
-func (t *topicOperation) get(id uint) (*models.Topic, error) {
-	var result models.Topic
+func (t *topicOperation) get(id uint) (*bbs.Topic, error) {
+	var result bbs.Topic
 	if err := t.db.Preload("Tags").Preload("Category").First(&result, id).Error; err != nil {
 		return nil, err
 	}
 	return &result, nil
 }
 
-func (t *topicOperation) add(topic *models.Topic) error {
-	var category models.Category
+func (t *topicOperation) add(topic *bbs.Topic) error {
+	var category bbs.Category
 	t.db.Model(&topic).Related(&category)
 	topic.Category = category
 	if err := t.db.Create(&topic).Error; err != nil {
@@ -123,14 +123,14 @@ func (t *topicOperation) add(topic *models.Topic) error {
 	return nil
 }
 
-func (t *topicOperation) remove(topic *models.Topic) (err error) {
+func (t *topicOperation) remove(topic *bbs.Topic) (err error) {
 	t.db.Model(topic).Association("Tags").Clear()
 	t.db.Delete(topic)
 	return
 }
 
-func (t *topicOperation) update(topic *models.Topic) error {
-	var category models.Category
+func (t *topicOperation) update(topic *bbs.Topic) error {
+	var category bbs.Category
 	t.db.Model(topic).Related(&category)
 	topic.Category = category
 	if err := t.db.Save(topic).Error; err != nil {
