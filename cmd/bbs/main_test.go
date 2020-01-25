@@ -65,7 +65,7 @@ func TestListTopic(t *testing.T) {
 }
 
 func TestGetTopic(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/topic/2", nil)
+	request, _ := http.NewRequest("GET", "/topic/1", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {

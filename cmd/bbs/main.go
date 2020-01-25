@@ -69,5 +69,7 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 		TLSConfig:      nil,
 	}
-	server.ListenAndServeTLS("cert.pem", "key.pem")
+
+	//server.ListenAndServeTLS("cert.pem", "key.pem")
+	server.ListenAndServe()
 }

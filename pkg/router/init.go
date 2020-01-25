@@ -30,7 +30,7 @@ func NewRouter(handlers []interface{}) *mux.Router {
 				},
 				Route{
 					Method:  "GET",
-					Path:    "/topic/:id",
+					Path:    "/topic/:topic_id",
 					Handler: h.GetTopic,
 				},
 				Route{
