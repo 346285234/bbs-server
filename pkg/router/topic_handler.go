@@ -84,23 +84,23 @@ func (t *TopicHandler) ListTopic(w http.ResponseWriter, r *http.Request, p httpr
 	vars := r.URL.Query()
 
 	query := make(map[string]interface{})
-	id1, _ := strconv.Atoi(p.ByName("topic_id"))
+	id1, _ := strconv.Atoi(vars.Get("topic_id"))
 	groupID := uint(id1)
 	if groupID != 0 {
 		query["group_id"] = groupID
 	}
-	id2, _ := strconv.Atoi(p.ByName("user_id"))
+	id2, _ := strconv.Atoi(vars.Get("user_id"))
 	userID := uint(id2)
 	if userID != 0 {
 		query["user_id"] = userID
 	}
-	id3, _ := strconv.Atoi(p.ByName("category_id"))
+	id3, _ := strconv.Atoi(vars.Get("category_id"))
 	categoryID := uint(id3)
 	if categoryID != 0 {
 		query["category_id"] = categoryID
 	}
-	id4, _ := strconv.Atoi(p.ByName("page"))
-	id5, _ := strconv.Atoi(p.ByName("page_size"))
+	id4, _ := strconv.Atoi(vars.Get("page"))
+	id5, _ := strconv.Atoi(vars.Get("page_size"))
 	page := uint(id4)
 	pageSize := uint(id5)
 	if page != 0 && pageSize != 0 {

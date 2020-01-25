@@ -1,14 +1,12 @@
-package gorm
+package database
 
 import (
-	"github.com/346285234/bbs-server/configs"
 	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/jinzhu/gorm"
 )
 
 func Open(name, url string) *gorm.DB {
-
-	db, err := gorm.Open("mysql", configs.Config.MySQLURL)
+	db, err := gorm.Open(name, url)
 	if err != nil {
 		panic(err)
 	}

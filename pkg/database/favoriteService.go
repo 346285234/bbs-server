@@ -1,4 +1,4 @@
-package gorm
+package database
 
 import (
 	"github.com/346285234/bbs-server/pkg/bbs"

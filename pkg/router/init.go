@@ -2,10 +2,8 @@ package router
 
 import (
 	"encoding/json"
-	"net/http"
-	"strconv"
-
 	mux "github.com/julienschmidt/httprouter"
+	"net/http"
 )
 
 type errorHandler func(http.ResponseWriter, *http.Request, mux.Params) (interface{}, *AppError)
@@ -170,17 +168,4 @@ func checkLogin(fn errorHandler) errorHandler {
 
 func checkUser() error {
 	return nil
-}
-
-func CheckUser(r *http.Request) bool {
-	return true
-}
-
-func StrToInt(from string) int {
-	result, error := strconv.Atoi(from)
-	if error != nil {
-		result = 0
-	}
-
-	return result
 }

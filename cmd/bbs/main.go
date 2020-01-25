@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/346285234/bbs-server/pkg/gorm"
+	"github.com/346285234/bbs-server/pkg/database"
 
 	"github.com/346285234/bbs-server/configs"
 	"github.com/346285234/bbs-server/pkg/router"
@@ -41,14 +41,14 @@ func main() {
 	//log.SetLevel(log.WarnLevel)
 
 	// Setting db.
-	db := gorm.Open("mysql", configs.Config.MySQLURL)
+	db := database.Open("mysql", configs.Config.MySQLURL)
 
-	categoryService := gorm.NewCategoryService(db)
-	commentService := gorm.NewCommentService(db)
-	favoriteService := gorm.NewFavoriteService(db)
-	likeService := gorm.NewLikeService(db)
-	tagService := gorm.NewTagService(db)
-	topicService := gorm.NewTopicService(db)
+	categoryService := database.NewCategoryService(db)
+	commentService := database.NewCommentService(db)
+	favoriteService := database.NewFavoriteService(db)
+	likeService := database.NewLikeService(db)
+	tagService := database.NewTagService(db)
+	topicService := database.NewTopicService(db)
 
 	categoryHandler := router.NewCategoryHandler(&categoryService)
 	commentHandler := router.NewCommentHandler(&commentService)

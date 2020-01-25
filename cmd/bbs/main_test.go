@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/346285234/bbs-server/pkg/gorm"
+	"github.com/346285234/bbs-server/pkg/database"
+	"github.com/346285234/bbs-server/pkg/router"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 	"time"
 
-	"github.com/346285234/bbs-server/pkg/router"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -27,14 +27,14 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	db := gorm.Open("mysql", "root:346285234@tcp(localhost)/bbs?parseTime=true")
+	db := database.Open("mysql", "root:346285234@/bbs?parseTime=true")
 
-	categoryService := gorm.NewCategoryService(db)
-	commentService := gorm.NewCommentService(db)
-	favoriteService := gorm.NewFavoriteService(db)
-	likeService := gorm.NewLikeService(db)
-	tagService := gorm.NewTagService(db)
-	topicService := gorm.NewTopicService(db)
+	categoryService := database.NewCategoryService(db)
+	commentService := database.NewCommentService(db)
+	favoriteService := database.NewFavoriteService(db)
+	likeService := database.NewLikeService(db)
+	tagService := database.NewTagService(db)
+	topicService := database.NewTopicService(db)
 
 	categoryHandler := router.NewCategoryHandler(&categoryService)
 	commentHandler := router.NewCommentHandler(&commentService)
