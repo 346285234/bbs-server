@@ -158,7 +158,8 @@ func checkError(fn errorHandler) mux.Handle {
 
 func checkLogin(fn errorHandler) errorHandler {
 	return func(w http.ResponseWriter, r *http.Request, p mux.Params) (interface{}, *AppError) {
-		if err := checkUser(); err == nil {
+		userID := r.Header.Get("userID")
+		if err := checkUser(userID); err == nil {
 			return fn(w, r, p)
 		} else {
 			return nil, NewAppError(err)
@@ -166,6 +167,20 @@ func checkLogin(fn errorHandler) errorHandler {
 	}
 }
 
-func checkUser() error {
+func checkUser(id string) error {
+	//url := ""
+	//resp, err := http.Get(url)
+	//if err != nil {
+	//	fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+	//	os.Exit(1)
+	//}
+	//b, err := ioutil.ReadAll(resp.Body)
+	//resp.Body.Close()
+	//if err != nil {
+	//	fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
+	//	os.Exit(1)
+	//}
+	//fmt.Printf("%s", b)
+
 	return nil
 }

@@ -20,7 +20,7 @@ func NewLikeHandler(s bbs.LikeService) LikeHandler {
 func (l *LikeHandler) MarkLikeTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	// request.
 	id1, _ := strconv.Atoi(p.ByName("topic_id"))
-	id2, _ := strconv.Atoi(p.ByName("userID"))
+	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	topicID := uint(id1)
 	userID := uint(id2)
 	var like bbs.Like
@@ -46,7 +46,7 @@ func (l *LikeHandler) MarkLikeTopic(w http.ResponseWriter, r *http.Request, p ht
 
 func (l *LikeHandler) CheckLikeTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	id1, _ := strconv.Atoi(p.ByName("topic_id"))
-	id2, _ := strconv.Atoi(p.ByName("userID"))
+	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	topicID := uint(id1)
 	userID := uint(id2)
 
@@ -66,7 +66,7 @@ func (l *LikeHandler) CheckLikeTopic(w http.ResponseWriter, r *http.Request, p h
 func (l *LikeHandler) MarkLikeComment(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 
 	id1, _ := strconv.Atoi(p.ByName("topic_id"))
-	id2, _ := strconv.Atoi(p.ByName("userID"))
+	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	commentID := uint(id1)
 	userID := uint(id2)
 	var like bbs.Like
@@ -93,7 +93,7 @@ func (l *LikeHandler) MarkLikeComment(w http.ResponseWriter, r *http.Request, p 
 
 func (l *LikeHandler) CheckLikeComment(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	id1, _ := strconv.Atoi(p.ByName("topic_id"))
-	id2, _ := strconv.Atoi(p.ByName("userID"))
+	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	commentID := uint(id1)
 	userID := uint(id2)
 

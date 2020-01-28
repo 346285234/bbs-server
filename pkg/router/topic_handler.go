@@ -152,7 +152,8 @@ func (t *TopicHandler) GetTopic(w http.ResponseWriter, r *http.Request, p httpro
 
 func (t *TopicHandler) AddTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	// request.
-	id1, _ := strconv.Atoi(p.ByName("userID"))
+
+	id1, _ := strconv.Atoi(r.Header.Get("userID"))
 	userID := uint(id1)
 
 	var topicRequest TopicRequest
@@ -185,7 +186,7 @@ func (t *TopicHandler) RemoveTopic(w http.ResponseWriter, r *http.Request, p htt
 	}
 
 	topicID := uint(id)
-	id1, _ := strconv.Atoi(p.ByName("userID"))
+	id1, _ := strconv.Atoi(r.Header.Get("userID"))
 	userID := uint(id1)
 
 	// db.
@@ -200,7 +201,7 @@ func (t *TopicHandler) RemoveTopic(w http.ResponseWriter, r *http.Request, p htt
 
 func (t *TopicHandler) UpdateTopic(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	// request.
-	id1, _ := strconv.Atoi(p.ByName("userID"))
+	id1, _ := strconv.Atoi(r.Header.Get("userID"))
 	userID := uint(id1)
 
 	var topicRequest TopicRequest

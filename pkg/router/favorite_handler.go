@@ -19,7 +19,7 @@ func NewFavoriteHandler(s bbs.FavoriteService) FavoriteHanlder {
 
 func (f *FavoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	id1, _ := strconv.Atoi(p.ByName("topic_id"))
-	id2, _ := strconv.Atoi(p.ByName("userID"))
+	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	topicID := uint(id1)
 	userID := uint(id2)
 	var favorite bbs.Favorite
@@ -45,7 +45,7 @@ func (f *FavoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p
 
 func (f *FavoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	id1, _ := strconv.Atoi(p.ByName("topic_id"))
-	id2, _ := strconv.Atoi(p.ByName("userID"))
+	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	topicID := uint(id1)
 	userID := uint(id2)
 

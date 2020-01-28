@@ -66,7 +66,7 @@ func (c *CommentHandler) List(w http.ResponseWriter, r *http.Request, p httprout
 func (c *CommentHandler) Reply(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 	// request.
 	id1, _ := strconv.Atoi(p.ByName("topic_id"))
-	id2, _ := strconv.Atoi(p.ByName("userID"))
+	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	topicID := uint(id1)
 	userID := uint(id2)
 	type RequestBody struct {
