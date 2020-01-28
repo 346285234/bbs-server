@@ -3,6 +3,7 @@ package router
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/346285234/bbs-server/pkg/bbs"
 	"net/http"
 	"strconv"
@@ -119,6 +120,8 @@ func (t *TopicHandler) ListTopic(w http.ResponseWriter, r *http.Request, p httpr
 		return nil, NewAppError(err)
 	}
 
+	// TODO: Get users info.
+
 	// response.
 	topicsResponse := make([]TopicResponse, len(topics))
 	for i, v := range topics {
@@ -145,6 +148,13 @@ func (t *TopicHandler) GetTopic(w http.ResponseWriter, r *http.Request, p httpro
 		return nil, NewAppError(err)
 	}
 
+	// TODO: Get user info.
+	user, err := getUser(strconv.Itoa(int(topic.UserID)))
+	if err != nil {
+		return nil, NewAppError(err)
+	}
+	fmt.Println(user)
+
 	// response.
 	topicResponse := newTopicResponse(*topic)
 	return topicResponse, nil
@@ -164,6 +174,13 @@ func (t *TopicHandler) AddTopic(w http.ResponseWriter, r *http.Request, p httpro
 
 	// db.
 	err := t.service.AddTopic(&topic)
+
+	// TODO: Get user info.
+	user, err := getUser(strconv.Itoa(int(topic.UserID)))
+	if err != nil {
+		return nil, NewAppError(err)
+	}
+	fmt.Println(user)
 
 	if err != nil {
 		return nil, NewAppError(err)
@@ -215,6 +232,13 @@ func (t *TopicHandler) UpdateTopic(w http.ResponseWriter, r *http.Request, p htt
 	if err != nil {
 		return nil, NewAppError(err)
 	}
+
+	// TODO: Get user info.
+	user, err := getUser(strconv.Itoa(int(topic.UserID)))
+	if err != nil {
+		return nil, NewAppError(err)
+	}
+	fmt.Println(user)
 
 	// response.
 	data := newTopicResponse(*updated)

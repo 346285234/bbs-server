@@ -10,7 +10,9 @@ func Open(name, url string) *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	var m = []interface{}{&bbs.Topic{}, &bbs.Category{}, &bbs.Tag{}, &bbs.Favorite{}, &bbs.Like{}, &bbs.Comment{}}
+	var m = []interface{}{&bbs.Topic{}, &bbs.Category{},
+		&bbs.Tag{}, &bbs.Favorite{}, &bbs.Like{},
+		&bbs.Comment{}, &bbs.Follow{}}
 	for _, v := range m {
 		db.AutoMigrate(v)
 	}

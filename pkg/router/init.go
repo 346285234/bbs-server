@@ -20,9 +20,10 @@ func NewRouter(handlers []interface{}) *mux.Router {
 	var routes Routes
 
 	for _, v := range handlers {
+		var rs Routes
 		switch h := v.(type) {
 		case TopicHandler:
-			rs := Routes{
+			rs = Routes{
 				Route{
 					Method:  "GET",
 					Path:    "/topics",
@@ -48,26 +49,26 @@ func NewRouter(handlers []interface{}) *mux.Router {
 					Path:    "/topic/update",
 					Handler: checkLogin(h.UpdateTopic),
 				}}
-			routes = append(routes, rs...)
 		case FavoriteHanlder:
-			rs := Routes{Route{
-				Method:  "POST",
-				Path:    "/favorite/topic/:topic_id/mark",
-				Handler: checkLogin(h.MarkFavorite),
-			},
+			rs = Routes{
+				Route{
+					Method:  "POST",
+					Path:    "/favorite/topic/:topic_id/mark",
+					Handler: checkLogin(h.MarkFavorite),
+				},
 				Route{
 					Method:  "GET",
 					Path:    "/favorite/topic/:topic_id",
 					Handler: checkLogin(h.CheckFavorite),
 				},
 			}
-			routes = append(routes, rs...)
 		case LikeHandler:
-			rs := Routes{Route{
-				Method:  "POST",
-				Path:    "/like/topic/:topic_id/mark",
-				Handler: checkLogin(h.MarkLikeTopic),
-			},
+			rs = Routes{
+				Route{
+					Method:  "POST",
+					Path:    "/like/topic/:topic_id/mark",
+					Handler: checkLogin(h.MarkLikeTopic),
+				},
 				Route{
 					Method:  "POST",
 					Path:    "/like/comment/:comment_id/mark",
@@ -83,29 +84,28 @@ func NewRouter(handlers []interface{}) *mux.Router {
 					Path:    "/like/comment/:comment_id",
 					Handler: checkLogin(h.CheckLikeComment),
 				}}
-			routes = append(routes, rs...)
 		case CategoryHandler:
-			rs := Routes{
+			rs = Routes{
 				Route{
 					Method:  "GET",
 					Path:    "/categories",
 					Handler: h.ListCategory,
 				},
 			}
-			routes = append(routes, rs...)
 		case TagHandler:
-			rs := Routes{Route{
-				Method:  "GET",
-				Path:    "/tags",
-				Handler: checkLogin(h.ListTag),
-			}}
-			routes = append(routes, rs...)
+			rs = Routes{
+				Route{
+					Method:  "GET",
+					Path:    "/tags",
+					Handler: checkLogin(h.ListTag),
+				}}
 		case CommentHandler:
-			rs := Routes{Route{
-				Method:  "GET",
-				Path:    "/comments/:topic_id",
-				Handler: h.List,
-			},
+			rs = Routes{
+				Route{
+					Method:  "GET",
+					Path:    "/comments/:topic_id",
+					Handler: h.List,
+				},
 				Route{
 					Method:  "POST",
 					Path:    "/comment/:topic_id/reply",
@@ -116,9 +116,22 @@ func NewRouter(handlers []interface{}) *mux.Router {
 					Path:    "/comment/:topic_id/revoke",
 					Handler: checkLogin(h.Revoke),
 				}}
-			routes = append(routes, rs...)
-
+		case FollowHanlder:
+			rs = Routes{
+				Route{
+					Method:  "POST",
+					Path:    "/follow/user/:user_id/mark",
+					Handler: checkLogin(h.Mark),
+				},
+				Route{
+					Method:  "GET",
+					Path:    "/follow/user/:user_id/check",
+					Handler: checkLogin(h.Check),
+				},
+			}
 		}
+
+		routes = append(routes, rs...)
 	}
 
 	router := mux.New()
@@ -168,7 +181,8 @@ func checkLogin(fn errorHandler) errorHandler {
 }
 
 func checkUser(id string) error {
-	//url := ""
+
+	//url := "http://localhost:8201/inner/user/1"
 	//resp, err := http.Get(url)
 	//if err != nil {
 	//	fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
@@ -180,7 +194,16 @@ func checkUser(id string) error {
 	//	fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
 	//	os.Exit(1)
 	//}
+	//fmt.Println("hello world!")
 	//fmt.Printf("%s", b)
+	//fmt.Println(b)
 
 	return nil
+}
+
+type User struct {
+}
+
+func getUser(id string) (*User, error) {
+	return nil, nil
 }

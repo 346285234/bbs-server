@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/346285234/bbs-server/pkg/bbs"
 	"net/http"
 	"strconv"
@@ -52,6 +53,8 @@ func (c *CommentHandler) List(w http.ResponseWriter, r *http.Request, p httprout
 		return nil, NewAppError(err)
 	}
 
+	// TODO: Get users info.
+
 	commentsResponse := make([]CommentResponse, len(comments))
 	for i, v := range comments {
 		commentsResponse[i] = newCommentResponse(*v)
@@ -84,6 +87,13 @@ func (c *CommentHandler) Reply(w http.ResponseWriter, r *http.Request, p httprou
 	if err != nil {
 		return nil, NewAppError(err)
 	}
+
+	// TODO: Get user info.
+	user, err := getUser(strconv.Itoa(int(newComment.AuthorID)))
+	if err != nil {
+		return nil, NewAppError(err)
+	}
+	fmt.Println(user)
 
 	// response.
 	data := newCommentResponse(*newComment)

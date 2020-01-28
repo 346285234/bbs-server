@@ -57,8 +57,11 @@ func main() {
 	tagHandler := router.NewTagHandler(&tagService)
 	topicHandler := router.NewTopicHandler(&topicService)
 
+	followService := database.NewFollowService(db)
+	followHandler := router.NewFollowHandler(&followService)
+
 	handlers := []interface{}{categoryHandler, commentHandler, favoriteHandler, likeHandler,
-		tagHandler, topicHandler}
+		tagHandler, topicHandler, followHandler}
 
 	r := router.NewRouter(handlers)
 	server := &http.Server{

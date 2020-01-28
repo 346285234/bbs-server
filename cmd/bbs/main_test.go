@@ -43,8 +43,11 @@ func setup() {
 	tagHandler := router.NewTagHandler(&tagService)
 	topicHandler := router.NewTopicHandler(&topicService)
 
+	followService := database.NewFollowService(db)
+	followHandler := router.NewFollowHandler(&followService)
+
 	handlers := []interface{}{categoryHandler, commentHandler, favoriteHandler, likeHandler,
-		tagHandler, topicHandler}
+		tagHandler, topicHandler, followHandler}
 	r = router.NewRouter(handlers)
 	writer = httptest.NewRecorder()
 	flag.Parse()
@@ -321,6 +324,39 @@ func TestReplyComment(t *testing.T) {
 // TODO: undo.
 func TestRevokeComment(t *testing.T) {
 	request, _ := http.NewRequest("POST", "/comment/1/revoke", nil)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+// MARK: Follow.
+
+func TestMarkFollow(t *testing.T) {
+	buf := new(bytes.Buffer)
+	type RequestBody struct {
+		IsMark bool `json:"is_mark"`
+	}
+	var body = &RequestBody{false}
+	json.NewEncoder(buf).Encode(&body)
+	request, _ := http.NewRequest("POST", "/follow/user/2/mark", buf)
+	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+}
+
+func TestCheckFollow(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/follow/user/2/check", nil)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
