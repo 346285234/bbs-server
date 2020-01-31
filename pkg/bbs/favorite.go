@@ -11,4 +11,5 @@ type Favorite struct {
 type FavoriteService interface {
 	Mark(favorite Favorite, isMark bool) (err error)
 	Check(favorite Favorite) (bool, error)
+	List(topicID uint) ([]Favorite, error)
 }

@@ -1,8 +1,12 @@
-## follow
 
-### follow&unfollow user
 
-* **URL:** /follow/user/:user_id/mark
+## Favorite
+
+
+
+### Mark&unmark topic favorite
+
+* **URL:** /favorite/topic/:topic_id/mark
 * **method:** POST
 * **header:** user info
 * **body:**
@@ -26,9 +30,9 @@
 
 
 
-### Check follow user
+### Check topic favorite
 
-- **URL:** /follow/user/:user_id/check
+- **URL:** /favorite/topic/:topic_id/check
 
 - **method:** GET
 
@@ -49,9 +53,9 @@
 
 
 
-### Get topic follow users
+### Get topic favorite users
 
-- **URL:** /follow/topic/:topic_id
+- **URL:** /favorite/topic/:topic_id
 
 - **method:** GET
 

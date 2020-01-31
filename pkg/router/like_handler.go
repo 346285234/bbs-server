@@ -29,14 +29,14 @@ func (l *LikeHandler) MarkLikeTopic(w http.ResponseWriter, r *http.Request, p ht
 	like.UserID = userID
 
 	type RequestBody struct {
-		Unmark bool `json:"unmark"`
+		IsMark bool `json:"is_mark"`
 	}
 	var body RequestBody
 	json.NewDecoder(r.Body).Decode(&body)
 	defer r.Body.Close()
 
 	// db.
-	err := l.service.Mark(like, !body.Unmark)
+	err := l.service.Mark(like, body.IsMark)
 	if err != nil {
 		return nil, NewAppError(err)
 	}
@@ -65,7 +65,7 @@ func (l *LikeHandler) CheckLikeTopic(w http.ResponseWriter, r *http.Request, p h
 
 func (l *LikeHandler) MarkLikeComment(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
 
-	id1, _ := strconv.Atoi(p.ByName("topic_id"))
+	id1, _ := strconv.Atoi(p.ByName("comment_id"))
 	id2, _ := strconv.Atoi(r.Header.Get("userID"))
 	commentID := uint(id1)
 	userID := uint(id2)
@@ -75,14 +75,14 @@ func (l *LikeHandler) MarkLikeComment(w http.ResponseWriter, r *http.Request, p 
 	like.UserID = userID
 
 	type RequestBody struct {
-		Unmark bool `json:"unmark"`
+		IsMark bool `json:"is_mark"`
 	}
 	var body RequestBody
 	json.NewDecoder(r.Body).Decode(&body)
 	defer r.Body.Close()
 
 	// Get data.
-	err := l.service.Mark(like, !body.Unmark)
+	err := l.service.Mark(like, body.IsMark)
 
 	if err != nil {
 		return nil, NewAppError(err)
@@ -106,6 +106,42 @@ func (l *LikeHandler) CheckLikeComment(w http.ResponseWriter, r *http.Request, p
 	var data = struct {
 		IsMark bool `json:"is_mark"`
 	}{isMark}
+
+	return data, nil
+}
+
+func (l *LikeHandler) likeTopicUsers(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
+	id1, _ := strconv.Atoi(p.ByName("topic_id"))
+	topicID := uint(id1)
+
+	likes, _ := l.service.List(bbs.TopicType, topicID)
+	// TODO: Get users.
+	var users = make([]User, len(likes))
+	for i, v := range likes {
+		users[i] = User{ID: v.UserID}
+	}
+
+	var data = struct {
+		Users []User `json:"users"`
+	}{users}
+
+	return data, nil
+}
+
+func (l *LikeHandler) likeCommentUsers(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
+	id1, _ := strconv.Atoi(p.ByName("comment_id"))
+	commentID := uint(id1)
+
+	comments, _ := l.service.List(bbs.CommentType, commentID)
+	// TODO: Get users.
+	var users = make([]User, len(comments))
+	for i, v := range comments {
+		users[i] = User{ID: v.UserID}
+	}
+
+	var data = struct {
+		Users []User `json:"users"`
+	}{users}
 
 	return data, nil
 }

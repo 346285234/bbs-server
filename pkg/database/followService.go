@@ -33,6 +33,10 @@ func (f *FollowService) Check(follow bbs.Follow) (bool, error) {
 	return true, nil
 }
 
+func (f *FollowService) List(userID uint) ([]bbs.Follow, error) {
+	return f.op.list(userID)
+}
+
 type followOperation struct {
 	db *gorm.DB
 }
@@ -41,12 +45,20 @@ func newFollowOperation(db *gorm.DB) followOperation {
 	return followOperation{db}
 }
 
-func (f *followOperation) list() (follows []bbs.Follow, err error) {
+func (f *followOperation) listAll() (follows []bbs.Follow, err error) {
 	if err := f.db.Find(&follows).Error; err != nil {
 		return nil, err
 	}
 
 	return follows, nil
+}
+
+func (f *followOperation) list(userID uint) (follows []bbs.Follow, err error) {
+	if err := f.db.Where("subject_id = ?", userID).Find(&follows).Error; err != nil {
+		return nil, err
+	}
+
+	return
 }
 
 func (f *followOperation) get(follow bbs.Follow) (*bbs.Follow, error) {

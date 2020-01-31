@@ -1,54 +1,3 @@
-## Favorite
-
-
-
-### Mark&unmark topic favorite
-
-* **URL:** /favorite/topic/:topic_id/mark
-* **method:** POST
-* **header:** user info
-* **body:**
-
-```json
-{
-  "unmark": false,
-}
-```
-
-* **Response:**
-
-```json
-{
-  "success": true,
-  "code": 200,
-  "message": "OK",
-  "data": {}
-}
-```
-
-
-
-### Check topic favorite
-
-- **URL:** /favorite/topic/:topic_id
-
-- **method:** GET
-
-- **header:** user info
-
-- **Response:**
-
-  ```
-  {
-    "success": true,
-    "code": 200,
-    "message": "OK",
-    "data": {
-      "is_mark": true,
-    }
-  }
-  ```
-
 
 
 ## Like
@@ -64,8 +13,7 @@
 
 ```json
 {
-  "type": 1,
-  "unmark": false,
+  "is_mark": true,
 }
 ```
 
@@ -91,7 +39,7 @@
 
 ```json
 {
-	"unmark": true,
+	"is_mark": true,
 }
 ```
 
@@ -110,7 +58,7 @@
 
 ### Check topic like
 
-* **URL:** /like/topic/:topic_id
+* **URL:** /like/topic/:topic_id/check
 * **method:** GET
 * **header:** user info
 
@@ -131,7 +79,7 @@
 
 ### Check comment like
 
-* **URL:** /like/comment/:comment_id
+* **URL:** /like/comment/:comment_id/check
 * **method:** GET
 * **header:** user info
 
@@ -149,4 +97,60 @@
 ```
 
 
+
+### Get topic like users
+
+- **URL:** /like/topic/:topic_id
+
+- **method:** GET
+
+- **header:** user info
+
+- **Response:**
+
+  ```
+  {
+    "success": true,
+    "code": 200,
+    "message": "OK",
+    "data": {
+    	users:[
+    		{
+    			"id": 1,
+    			"name": "",
+    			"portrait": "",
+    		}
+    	]
+    }
+  }
+  ```
+
+
+
+### Get comment like users
+
+- **URL:** /like/comment/:comment_id
+
+- **method:** GET
+
+- **header:** user info
+
+- **Response:**
+
+  ```
+  {
+    "success": true,
+    "code": 200,
+    "message": "OK",
+    "data": {
+    	users:[
+    		{
+    			"id": 1,
+    			"name": "",
+    			"portrait": "",
+    		}
+    	]
+    }
+  }
+  ```
 

@@ -59,3 +59,19 @@ func (f *FollowHanlder) Check(w http.ResponseWriter, r *http.Request, p httprout
 
 	return data, nil
 }
+
+func (f *FollowHanlder) FollowUsers(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
+	id1, _ := strconv.Atoi(p.ByName("user_id"))
+
+	follows, _ := f.service.List(uint(id1))
+	// TODO: Get users.
+	var users []User
+	for _, v := range follows {
+		users = append(users, User{ID: v.ObjectID})
+	}
+	var data = struct {
+		Users []User `json:"users"`
+	}{users}
+
+	return data, nil
+}

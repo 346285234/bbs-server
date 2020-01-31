@@ -19,4 +19,5 @@ type Like struct {
 type LikeService interface {
 	Mark(like Like, isMark bool) (err error)
 	Check(like Like) (bool, error)
+	List(objectType ObjectType, objectID uint) ([]Like, error)
 }

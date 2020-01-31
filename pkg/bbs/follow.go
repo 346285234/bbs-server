@@ -11,4 +11,5 @@ type Follow struct {
 type FollowService interface {
 	Mark(follow Follow, isMark bool) (err error)
 	Check(follow Follow) (bool, error)
+	List(userID uint) (follows []Follow, err error)
 }

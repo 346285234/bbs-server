@@ -42,6 +42,10 @@ func (f *FavoriteService) Check(favorite bbs.Favorite) (bool, error) {
 	return true, nil
 }
 
+func (f *FavoriteService) List(topicID uint) ([]bbs.Favorite, error) {
+	return f.op.listWith(topicID)
+}
+
 type favoriteOperation struct {
 	db *gorm.DB
 }
@@ -52,6 +56,14 @@ func newFavoriteOperation(db *gorm.DB) favoriteOperation {
 
 func (f *favoriteOperation) list() (favorites []bbs.Favorite, err error) {
 	if err := f.db.Find(&favorites).Error; err != nil {
+		return nil, err
+	}
+
+	return favorites, nil
+}
+
+func (f *favoriteOperation) listWith(topicID uint) (favorites []bbs.Favorite, err error) {
+	if err := f.db.Where("topic_id = ?", topicID).Find(&favorites).Error; err != nil {
 		return nil, err
 	}
 

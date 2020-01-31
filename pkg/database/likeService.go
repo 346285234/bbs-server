@@ -52,6 +52,10 @@ func (l *LikeService) Check(like bbs.Like) (bool, error) {
 	return true, nil
 }
 
+func (l *LikeService) List(objectType bbs.ObjectType, objectID uint) ([]bbs.Like, error) {
+	return l.op.listWith(objectType, objectID)
+}
+
 type likeOperation struct {
 	db *gorm.DB
 }
@@ -62,6 +66,14 @@ func newLikeOperation(db *gorm.DB) likeOperation {
 
 func (l *likeOperation) list() (like []bbs.Like, err error) {
 	if err := l.db.Find(&like).Error; err != nil {
+		return nil, err
+	}
+
+	return like, nil
+}
+
+func (l *likeOperation) listWith(objectType bbs.ObjectType, objectID uint) (like []bbs.Like, err error) {
+	if err := l.db.Where("object_type = ? AND object_id = ?", objectType, objectID).Find(&like).Error; err != nil {
 		return nil, err
 	}
 

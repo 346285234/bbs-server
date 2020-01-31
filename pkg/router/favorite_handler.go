@@ -27,14 +27,14 @@ func (f *FavoriteHanlder) MarkFavorite(w http.ResponseWriter, r *http.Request, p
 	favorite.UserID = userID
 
 	type RequestBody struct {
-		Unmark bool `json:"unmark"`
+		IsMark bool `json:"is_mark"`
 	}
 	var body RequestBody
 	json.NewDecoder(r.Body).Decode(&body)
 	defer r.Body.Close()
 
 	// Get data.
-	err := f.service.Mark(favorite, !body.Unmark)
+	err := f.service.Mark(favorite, body.IsMark)
 
 	if err != nil {
 		return nil, NewAppError(err)
@@ -57,6 +57,24 @@ func (f *FavoriteHanlder) CheckFavorite(w http.ResponseWriter, r *http.Request, 
 	var data = struct {
 		IsMark bool `json:"is_mark"`
 	}{isMark}
+
+	return data, nil
+}
+
+func (f *FavoriteHanlder) FavoriteUsers(w http.ResponseWriter, r *http.Request, p httprouter.Params) (interface{}, *AppError) {
+	id1, _ := strconv.Atoi(p.ByName("topic_id"))
+	topicID := uint(id1)
+	favorites, _ := f.service.List(topicID)
+
+	// TODO: Get users.
+	var users = make([]User, len(favorites))
+	for i, v := range favorites {
+		users[i] = User{ID: v.UserID}
+	}
+
+	var data = struct {
+		Users []User `json:"users"`
+	}{users}
 
 	return data, nil
 }

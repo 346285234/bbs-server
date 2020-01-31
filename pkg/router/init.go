@@ -58,8 +58,13 @@ func NewRouter(handlers []interface{}) *mux.Router {
 				},
 				Route{
 					Method:  "GET",
-					Path:    "/favorite/topic/:topic_id",
+					Path:    "/favorite/topic/:topic_id/check",
 					Handler: checkLogin(h.CheckFavorite),
+				},
+				Route{
+					Method:  "GET",
+					Path:    "/favorite/topic/:topic_id",
+					Handler: h.FavoriteUsers,
 				},
 			}
 		case LikeHandler:
@@ -76,14 +81,25 @@ func NewRouter(handlers []interface{}) *mux.Router {
 				},
 				Route{
 					Method:  "GET",
-					Path:    "/like/topic/:topic_id",
+					Path:    "/like/topic/:topic_id/check",
 					Handler: checkLogin(h.CheckLikeTopic),
 				},
 				Route{
 					Method:  "GET",
-					Path:    "/like/comment/:comment_id",
+					Path:    "/like/comment/:comment_id/check",
 					Handler: checkLogin(h.CheckLikeComment),
-				}}
+				},
+				Route{
+					Method:  "GET",
+					Path:    "/like/topic/:topic_id",
+					Handler: h.likeTopicUsers,
+				},
+				Route{
+					Method:  "GET",
+					Path:    "/like/comment/:comment_id",
+					Handler: h.likeCommentUsers,
+				},
+			}
 		case CategoryHandler:
 			rs = Routes{
 				Route{
@@ -127,6 +143,11 @@ func NewRouter(handlers []interface{}) *mux.Router {
 					Method:  "GET",
 					Path:    "/follow/user/:user_id/check",
 					Handler: checkLogin(h.Check),
+				},
+				Route{
+					Method:  "GET",
+					Path:    "/follow/user/:user_id",
+					Handler: h.FollowUsers,
 				},
 			}
 		}
@@ -202,6 +223,9 @@ func checkUser(id string) error {
 }
 
 type User struct {
+	ID uint
+	//Name string
+	//Portrait string
 }
 
 func getUser(id string) (*User, error) {

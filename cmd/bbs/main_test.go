@@ -197,11 +197,11 @@ func TestListTag(t *testing.T) {
 func TestMarkFavorite(t *testing.T) {
 	buf := new(bytes.Buffer)
 	type RequestBody struct {
-		Unmark bool `json:"unmark"`
+		IsMark bool `json:"is_mark"`
 	}
-	var body = &RequestBody{false}
+	var body = &RequestBody{true}
 	json.NewEncoder(buf).Encode(&body)
-	request, _ := http.NewRequest("POST", "/favorite/topic/2/mark", buf)
+	request, _ := http.NewRequest("POST", "/favorite/topic/1/mark", buf)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
@@ -213,8 +213,20 @@ func TestMarkFavorite(t *testing.T) {
 }
 
 func TestCheckFavorite(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/favorite/topic/1", nil)
+	request, _ := http.NewRequest("GET", "/favorite/topic/1/check", nil)
 	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestFavoriteUsers(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/favorite/topic/1", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -228,7 +240,7 @@ func TestCheckFavorite(t *testing.T) {
 func TestMarkLikeTopic(t *testing.T) {
 	buf := new(bytes.Buffer)
 	type RequestBody struct {
-		Unmark bool `json:"unmark"`
+		IsMark bool `json:"is_mark"`
 	}
 	var body = &RequestBody{true}
 	json.NewEncoder(buf).Encode(&body)
@@ -244,8 +256,20 @@ func TestMarkLikeTopic(t *testing.T) {
 }
 
 func TestCheckLikeTopic(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/like/topic/1", nil)
+	request, _ := http.NewRequest("GET", "/like/topic/1/check", nil)
 	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestLikeTopicUsers(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/like/topic/1", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -259,11 +283,11 @@ func TestCheckLikeTopic(t *testing.T) {
 func TestMarkLikeComment(t *testing.T) {
 	buf := new(bytes.Buffer)
 	type RequestBody struct {
-		Unmark bool `json:"unmark"`
+		IsMark bool `json:"is_mark"`
 	}
 	var body = &RequestBody{true}
 	json.NewEncoder(buf).Encode(&body)
-	request, _ := http.NewRequest("POST", "/like/comment/2/mark", buf)
+	request, _ := http.NewRequest("POST", "/like/comment/1/mark", buf)
 	request.Header.Add("userID", userID)
 	r.ServeHTTP(writer, request)
 
@@ -275,8 +299,20 @@ func TestMarkLikeComment(t *testing.T) {
 }
 
 func TestCheckLikeComment(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/like/comment/2", nil)
+	request, _ := http.NewRequest("GET", "/like/comment/2/check", nil)
 	request.Header.Add("userID", userID)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestLikeCommentUsers(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/like/comment/1", nil)
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
@@ -342,7 +378,7 @@ func TestMarkFollow(t *testing.T) {
 	type RequestBody struct {
 		IsMark bool `json:"is_mark"`
 	}
-	var body = &RequestBody{false}
+	var body = &RequestBody{true}
 	json.NewEncoder(buf).Encode(&body)
 	request, _ := http.NewRequest("POST", "/follow/user/2/mark", buf)
 	request.Header.Add("userID", userID)
@@ -361,6 +397,19 @@ func TestCheckFollow(t *testing.T) {
 	r.ServeHTTP(writer, request)
 
 	if writer.Code != 200 {
+		t.Errorf("Response code is %v", writer.Code)
+	}
+
+	fmt.Println(writer.Body)
+
+}
+
+func TestListFollow(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/follow/user/1", nil)
+	r.ServeHTTP(writer, request)
+
+	if writer.Code != 200 {
+
 		t.Errorf("Response code is %v", writer.Code)
 	}
 
