@@ -185,6 +185,7 @@ func checkError(fn errorHandler) mux.Handle {
 		}
 
 		bytes, _ := json.Marshal(response)
+		w.Header().Set("content-type", "application/json")
 		w.Write(bytes)
 
 	}
@@ -203,31 +204,11 @@ func checkLogin(fn errorHandler) errorHandler {
 
 func checkUser(id string) error {
 
-	//url := "http://localhost:8201/inner/user/1"
-	//resp, err := http.Get(url)
-	//if err != nil {
-	//	fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
-	//	os.Exit(1)
-	//}
-	//b, err := ioutil.ReadAll(resp.Body)
-	//resp.Body.Close()
-	//if err != nil {
-	//	fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
-	//	os.Exit(1)
-	//}
-	//fmt.Println("hello world!")
-	//fmt.Printf("%s", b)
-	//fmt.Println(b)
-
 	return nil
 }
 
-type User struct {
-	ID uint
-	//Name string
-	//Portrait string
-}
-
-func getUser(id string) (*User, error) {
-	return nil, nil
+type UserResponse struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	Portrait string `json:"portrait"`
 }

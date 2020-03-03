@@ -64,7 +64,6 @@ func TestListTopic(t *testing.T) {
 	}
 
 	fmt.Println(writer.Body)
-
 }
 
 func TestGetTopic(t *testing.T) {

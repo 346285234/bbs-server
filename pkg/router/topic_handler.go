@@ -3,13 +3,14 @@ package router
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/346285234/bbs-server/pkg/bbs"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
+
+	"github.com/346285234/bbs-server/pkg/user"
 )
 
 type TopicRequest struct {
@@ -40,20 +41,20 @@ func (t TopicRequest) RequestToTopic(userID uint) bbs.Topic {
 }
 
 type TopicResponse struct {
-	ID           uint     `json:"id"`
-	Title        string   `json:"title"`
-	Tags         []string `json:"tags"`
-	CategoryID   uint     `json:"category_id"`
-	CategoryName string   `json:"category_name"`
-	AuthorID     uint     `json:"author_id"`
-	//AuthorName string `json:"author_name"`
-	//AuthorPortrait string `json:"author_portrait"`
-	Description   string    `json:"description"`
-	Content       string    `json:"content"`
-	ModifyTime    time.Time `json:"modify_time"`
-	FavoriteCount uint      `json:"favorite_count"`
-	LikeCount     uint      `json:"like_count"`
-	ViewCount     uint      `json:"view_count"`
+	ID             uint      `json:"id"`
+	Title          string    `json:"title"`
+	Tags           []string  `json:"tags"`
+	CategoryID     uint      `json:"category_id"`
+	CategoryName   string    `json:"category_name"`
+	AuthorID       uint      `json:"author_id"`
+	AuthorName     string    `json:"author_name"`
+	AuthorPortrait string    `json:"author_portrait"`
+	Description    string    `json:"description"`
+	Content        string    `json:"content"`
+	ModifyTime     time.Time `json:"modify_time"`
+	FavoriteCount  uint      `json:"favorite_count"`
+	LikeCount      uint      `json:"like_count"`
+	ViewCount      uint      `json:"view_count"`
 }
 
 func Intro(from string) string {
@@ -62,11 +63,11 @@ func Intro(from string) string {
 
 func newTopicResponse(topic bbs.Topic) TopicResponse {
 	strings := newTags(topic.Tags)
-	response := TopicResponse{topic.ID, topic.Title, strings,
-		topic.CategoryID, topic.Category.Value,
-		topic.UserID, topic.Intro, topic.Content,
-		topic.UpdatedAt, topic.FavoritesCount,
-		topic.LikeCount, topic.ViewCount}
+	response := TopicResponse{ID: topic.ID, Title: topic.Title, Tags: strings,
+		CategoryID: topic.CategoryID, CategoryName: topic.Category.Value,
+		AuthorID: topic.UserID, Description: topic.Intro, Content: topic.Content,
+		ModifyTime: topic.UpdatedAt, FavoriteCount: topic.FavoritesCount,
+		LikeCount: topic.LikeCount, ViewCount: topic.ViewCount}
 
 	return response
 }
@@ -120,13 +121,34 @@ func (t *TopicHandler) ListTopic(w http.ResponseWriter, r *http.Request, p httpr
 		return nil, NewAppError(err)
 	}
 
-	// TODO: Get users info.
-
 	// response.
 	topicsResponse := make([]TopicResponse, len(topics))
 	for i, v := range topics {
 		topicResponse := newTopicResponse(v)
 		topicsResponse[i] = topicResponse
+	}
+
+	// Get users info.
+	userMap := make(map[uint]*user.User)
+	for _, v := range topics {
+		userMap[v.UserID] = nil
+	}
+
+	ids := make([]uint, len(userMap))
+	i := 0
+	for k := range userMap {
+		ids[i] = k
+		i++
+	}
+
+	users, _ := user.GetUsers(ids)
+	for i, v := range ids {
+		userMap[v] = &users[i]
+	}
+	for i := range topicsResponse {
+		user := userMap[topicsResponse[i].AuthorID]
+		topicsResponse[i].AuthorName = user.Name
+		topicsResponse[i].AuthorPortrait = user.Portrait
 	}
 
 	data := struct {
@@ -148,15 +170,17 @@ func (t *TopicHandler) GetTopic(w http.ResponseWriter, r *http.Request, p httpro
 		return nil, NewAppError(err)
 	}
 
-	// TODO: Get user info.
-	user, err := getUser(strconv.Itoa(int(topic.UserID)))
+	// response.
+	topicResponse := newTopicResponse(*topic)
+
+	// Get user info.
+	user, err := user.GetUser(topic.UserID)
 	if err != nil {
 		return nil, NewAppError(err)
 	}
-	fmt.Println(user)
+	topicResponse.AuthorName = user.Name
+	topicResponse.AuthorPortrait = user.Portrait
 
-	// response.
-	topicResponse := newTopicResponse(*topic)
 	return topicResponse, nil
 }
 
@@ -175,19 +199,21 @@ func (t *TopicHandler) AddTopic(w http.ResponseWriter, r *http.Request, p httpro
 	// db.
 	err := t.service.AddTopic(&topic)
 
-	// TODO: Get user info.
-	user, err := getUser(strconv.Itoa(int(topic.UserID)))
-	if err != nil {
-		return nil, NewAppError(err)
-	}
-	fmt.Println(user)
-
 	if err != nil {
 		return nil, NewAppError(err)
 	}
 
 	// response.
 	data := newTopicResponse(topic)
+
+	// Get user info.
+	user, err := user.GetUser(topic.UserID)
+	if err != nil {
+		return nil, NewAppError(err)
+	}
+	data.AuthorName = user.Name
+	data.AuthorPortrait = user.Portrait
+
 	return data, nil
 }
 
@@ -233,14 +259,16 @@ func (t *TopicHandler) UpdateTopic(w http.ResponseWriter, r *http.Request, p htt
 		return nil, NewAppError(err)
 	}
 
-	// TODO: Get user info.
-	user, err := getUser(strconv.Itoa(int(topic.UserID)))
+	// response.
+	data := newTopicResponse(*updated)
+
+	// Get user info.
+	user, err := user.GetUser(topic.UserID)
 	if err != nil {
 		return nil, NewAppError(err)
 	}
-	fmt.Println(user)
+	data.AuthorName = user.Name
+	data.AuthorPortrait = user.Portrait
 
-	// response.
-	data := newTopicResponse(*updated)
 	return data, nil
 }

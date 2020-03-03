@@ -3,6 +3,7 @@ package router
 import (
 	"encoding/json"
 	"github.com/346285234/bbs-server/pkg/bbs"
+	"github.com/346285234/bbs-server/pkg/user"
 	"net/http"
 	"strconv"
 
@@ -115,15 +116,25 @@ func (l *LikeHandler) likeTopicUsers(w http.ResponseWriter, r *http.Request, p h
 	topicID := uint(id1)
 
 	likes, _ := l.service.List(bbs.TopicType, topicID)
-	// TODO: Get users.
-	var users = make([]User, len(likes))
-	for i, v := range likes {
-		users[i] = User{ID: v.UserID}
+
+	// Get users.
+	ids := make([]uint, len(likes))
+	i := 0
+	for _, v := range likes {
+		ids[i] = v.UserID
+		i++
+	}
+	users, _ := user.GetUsers(ids)
+
+	userResponse := make([]UserResponse, len(users))
+	for _, v := range users {
+		r := UserResponse{v.ID, v.Name, v.Portrait}
+		userResponse = append(userResponse, r)
 	}
 
 	var data = struct {
-		Users []User `json:"users"`
-	}{users}
+		Users []UserResponse `json:"users"`
+	}{userResponse}
 
 	return data, nil
 }
@@ -132,16 +143,25 @@ func (l *LikeHandler) likeCommentUsers(w http.ResponseWriter, r *http.Request, p
 	id1, _ := strconv.Atoi(p.ByName("comment_id"))
 	commentID := uint(id1)
 
-	comments, _ := l.service.List(bbs.CommentType, commentID)
-	// TODO: Get users.
-	var users = make([]User, len(comments))
-	for i, v := range comments {
-		users[i] = User{ID: v.UserID}
+	likes, _ := l.service.List(bbs.CommentType, commentID)
+	// Get users.
+	ids := make([]uint, len(likes))
+	i := 0
+	for _, v := range likes {
+		ids[i] = v.UserID
+		i++
+	}
+	users, _ := user.GetUsers(ids)
+
+	userResponse := make([]UserResponse, len(users))
+	for _, v := range users {
+		r := UserResponse{v.ID, v.Name, v.Portrait}
+		userResponse = append(userResponse, r)
 	}
 
 	var data = struct {
-		Users []User `json:"users"`
-	}{users}
+		Users []UserResponse `json:"users"`
+	}{userResponse}
 
 	return data, nil
 }

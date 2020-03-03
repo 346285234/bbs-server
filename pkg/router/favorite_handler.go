@@ -3,6 +3,7 @@ package router
 import (
 	"encoding/json"
 	"github.com/346285234/bbs-server/pkg/bbs"
+	"github.com/346285234/bbs-server/pkg/user"
 	"net/http"
 	"strconv"
 
@@ -66,15 +67,24 @@ func (f *FavoriteHanlder) FavoriteUsers(w http.ResponseWriter, r *http.Request, 
 	topicID := uint(id1)
 	favorites, _ := f.service.List(topicID)
 
-	// TODO: Get users.
-	var users = make([]User, len(favorites))
-	for i, v := range favorites {
-		users[i] = User{ID: v.UserID}
+	// Get users.
+	ids := make([]uint, len(favorites))
+	i := 0
+	for _, v := range favorites {
+		ids[0] = v.UserID
+		i++
+	}
+	users, _ := user.GetUsers(ids)
+
+	userResponse := make([]UserResponse, len(users))
+	for _, v := range users {
+		r := UserResponse{v.ID, v.Name, v.Portrait}
+		userResponse = append(userResponse, r)
 	}
 
 	var data = struct {
-		Users []User `json:"users"`
-	}{users}
+		Users []UserResponse `json:"users"`
+	}{userResponse}
 
 	return data, nil
 }

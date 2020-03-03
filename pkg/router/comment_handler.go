@@ -2,8 +2,8 @@ package router
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/346285234/bbs-server/pkg/bbs"
+	"github.com/346285234/bbs-server/pkg/user"
 	"net/http"
 	"strconv"
 	"time"
@@ -12,27 +12,27 @@ import (
 )
 
 type CommentResponse struct {
-	ID       uint `json:"id"`
-	AuthorID uint `json:"author_id"`
-	//AuthorName string `json:"author_name"`
-	//AuthorPortrait string `json:"author_portrait"`
-	Content    string            `json:"content"`
-	ModifyTime time.Time         `json:"modify_time"`
-	LikeCount  uint              `json:"like_count"`
-	Subs       []CommentResponse `json:"sub_comments"`
+	ID             uint              `json:"id"`
+	AuthorID       uint              `json:"author_id"`
+	AuthorName     string            `json:"author_name"`
+	AuthorPortrait string            `json:"author_portrait"`
+	Content        string            `json:"content"`
+	ModifyTime     time.Time         `json:"modify_time"`
+	LikeCount      uint              `json:"like_count"`
+	Subs           []CommentResponse `json:"sub_comments"`
 }
 
 func newCommentResponse(comment bbs.Comment) CommentResponse {
 	subComments := make([]CommentResponse, len(comment.Subs))
 	for i, v := range comment.Subs {
-		subComments[i] = CommentResponse{v.ID, v.AuthorID,
-			v.Content, v.UpdatedAt, v.LikeCount,
-			[]CommentResponse{}}
+		subComments[i] = CommentResponse{ID: v.ID, AuthorID: v.AuthorID,
+			Content: v.Content, ModifyTime: v.UpdatedAt, LikeCount: v.LikeCount,
+			Subs: []CommentResponse{}}
 	}
 
-	return CommentResponse{comment.ID, comment.AuthorID,
-		comment.Content, comment.UpdatedAt, comment.LikeCount,
-		subComments}
+	return CommentResponse{ID: comment.ID, AuthorID: comment.AuthorID,
+		Content: comment.Content, ModifyTime: comment.UpdatedAt, LikeCount: comment.LikeCount,
+		Subs: subComments}
 }
 
 type CommentHandler struct {
@@ -53,12 +53,43 @@ func (c *CommentHandler) List(w http.ResponseWriter, r *http.Request, p httprout
 		return nil, NewAppError(err)
 	}
 
-	// TODO: Get users info.
-
+	// Response.
 	commentsResponse := make([]CommentResponse, len(comments))
 	for i, v := range comments {
 		commentsResponse[i] = newCommentResponse(*v)
 	}
+
+	// Get users info.
+	userMap := make(map[uint]*user.User)
+	for _, v := range comments {
+		userMap[v.AuthorID] = nil
+		for _, v := range v.Subs {
+			userMap[v.AuthorID] = nil
+		}
+	}
+
+	ids := make([]uint, len(userMap))
+	i := 0
+	for k := range userMap {
+		ids[i] = k
+		i++
+	}
+
+	users, _ := user.GetUsers(ids)
+	for i, v := range ids {
+		userMap[v] = &users[i]
+	}
+	for i := range commentsResponse {
+		user := userMap[commentsResponse[i].AuthorID]
+		commentsResponse[i].AuthorName = user.Name
+		commentsResponse[i].AuthorPortrait = user.Portrait
+		for j := range commentsResponse[i].Subs {
+			user := userMap[commentsResponse[i].Subs[j].AuthorID]
+			commentsResponse[i].Subs[j].AuthorName = user.Name
+			commentsResponse[i].Subs[j].AuthorPortrait = user.Portrait
+		}
+	}
+
 	data := struct {
 		Total  int               `json:"total"`
 		Topics []CommentResponse `json:"comments"`
@@ -88,15 +119,17 @@ func (c *CommentHandler) Reply(w http.ResponseWriter, r *http.Request, p httprou
 		return nil, NewAppError(err)
 	}
 
-	// TODO: Get user info.
-	user, err := getUser(strconv.Itoa(int(newComment.AuthorID)))
+	// response.
+	data := newCommentResponse(*newComment)
+
+	// Get user info.
+	user, err := user.GetUser(newComment.AuthorID)
 	if err != nil {
 		return nil, NewAppError(err)
 	}
-	fmt.Println(user)
+	data.AuthorName = user.Name
+	data.AuthorPortrait = user.Portrait
 
-	// response.
-	data := newCommentResponse(*newComment)
 	return data, nil
 }
 

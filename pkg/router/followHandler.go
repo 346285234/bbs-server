@@ -3,6 +3,7 @@ package router
 import (
 	"encoding/json"
 	"github.com/346285234/bbs-server/pkg/bbs"
+	"github.com/346285234/bbs-server/pkg/user"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strconv"
@@ -64,14 +65,25 @@ func (f *FollowHanlder) FollowUsers(w http.ResponseWriter, r *http.Request, p ht
 	id1, _ := strconv.Atoi(p.ByName("user_id"))
 
 	follows, _ := f.service.List(uint(id1))
-	// TODO: Get users.
-	var users []User
+
+	// Get users.
+	ids := make([]uint, len(follows))
+	i := 0
 	for _, v := range follows {
-		users = append(users, User{ID: v.ObjectID})
+		ids[i] = v.ObjectID
+		i++
 	}
+	users, _ := user.GetUsers(ids)
+
+	userResponse := make([]UserResponse, len(users))
+	for _, v := range users {
+		r := UserResponse{v.ID, v.Name, v.Portrait}
+		userResponse = append(userResponse, r)
+	}
+
 	var data = struct {
-		Users []User `json:"users"`
-	}{users}
+		Users []UserResponse `json:"users"`
+	}{userResponse}
 
 	return data, nil
 }
