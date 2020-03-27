@@ -3,9 +3,8 @@ package user
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
-	"os"
 )
 
 type UserResponse struct {
@@ -29,8 +28,8 @@ func GetUsers(ids []uint) ([]User, error) {
 
 	resp, err := http.Post(url, contentType, buf)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
-		os.Exit(1)
+		log.Printf("fetch: %v\n", err)
+		return nil, err
 	}
 
 	var r UserResponse
@@ -39,6 +38,7 @@ func GetUsers(ids []uint) ([]User, error) {
 	if r.Success == true {
 		return r.Data, nil
 	} else {
+		// TODO: return error base on message from user server.
 		return nil, nil
 	}
 }

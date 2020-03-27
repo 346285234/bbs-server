@@ -1,13 +1,20 @@
 TODO:
+
+- [ ] log.
+- [ ] cache.
+- [ ] refactoring.
+    - [ ] bbs package: use interface instead.
+    - [ ] use factory to create service.
+    - [ ] ... 
+
+2020.2.24
+
 - [x] add check favorite and like api.
 - [x] topic update api.
 - [x] rest api request and response.
 - [x] logic, post action may change multiple table
-- [ ] cache.
+
 - [x] comment.
-- [ ] log.
-
-
 
 2020.1.19
 

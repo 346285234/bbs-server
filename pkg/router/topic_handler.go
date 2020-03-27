@@ -3,10 +3,11 @@ package router
 import (
 	"encoding/json"
 	"errors"
-	"github.com/346285234/bbs-server/pkg/bbs"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/346285234/bbs-server/pkg/bbs"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -141,7 +142,10 @@ func (t *TopicHandler) ListTopic(w http.ResponseWriter, r *http.Request, p httpr
 		i++
 	}
 
-	users, _ := user.GetUsers(ids)
+	users, err := user.GetUsers(ids)
+	if err != nil {
+		return nil, NewAppError(err)
+	}
 	for i, v := range ids {
 		userMap[v] = &users[i]
 	}

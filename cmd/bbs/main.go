@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"log"
 	"net/http"
+	"os"
 	"testing"
 	"time"
 
@@ -14,6 +16,7 @@ import (
 )
 
 func init() {
+
 }
 
 func main() {
@@ -31,14 +34,12 @@ func main() {
 	configs.LoadConfig(configPath)
 
 	// Log.
-	//file, err := os.OpenFile(common.Config.LogPath, os.O_CREATE|os.O_APPEND, 0644)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//defer file.Close()
-	//log.SetOutput(file)
-	//log.SetFormatter(&log.JSONFormatter{})
-	//log.SetLevel(log.WarnLevel)
+	file, err := os.OpenFile(configs.Config.LogPath, os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	log.SetOutput(file)
 
 	// Setting db.
 	db := database.Open("mysql", configs.Config.MySQLURL)
