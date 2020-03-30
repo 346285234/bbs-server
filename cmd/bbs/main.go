@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
-	"log"
 	"net/http"
 	"os"
 	"testing"
 	"time"
+
+	"log"
 
 	"github.com/346285234/bbs-server/pkg/database"
 
@@ -15,9 +16,25 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func init() {
-
-}
+/// Custom different log level.
+//var (
+//	Trace   *log.Logger
+//	Info    *log.Logger
+//	Warning *log.Logger
+//	Error   *log.Logger
+//)
+//
+//func init() {
+//	file, err := os.OpenFile("error.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+//	if err != nil {
+//		log.Fatalln("Failed to open error log file:", err)
+//	}
+//
+//	Trace = log.New(ioutil.Discard, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
+//	Info = log.New(os.Stdout, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
+//	Warning = log.New(os.Stdout, "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
+//	Error = log.New(io.MultiWriter(file, os.Stderr), "TRACE: ", log.Ldate|log.Ltime|log.Lshortfile)
+//}
 
 func main() {
 
@@ -72,6 +89,7 @@ func main() {
 		WriteTimeout:   time.Duration(configs.Config.WriteTimeout * int64(time.Second)),
 		MaxHeaderBytes: 1 << 20,
 		TLSConfig:      nil,
+		ErrorLog:       log.New(file, "", 0),
 	}
 
 	//server.ListenAndServeTLS("cert.pem", "key.pem")

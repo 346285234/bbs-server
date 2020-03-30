@@ -2,11 +2,12 @@ package router
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
+
 	"github.com/346285234/bbs-server/pkg/bbs"
 	"github.com/346285234/bbs-server/pkg/user"
 	"github.com/julienschmidt/httprouter"
-	"net/http"
-	"strconv"
 )
 
 type FollowHanlder struct {
@@ -73,7 +74,10 @@ func (f *FollowHanlder) FollowUsers(w http.ResponseWriter, r *http.Request, p ht
 		ids[i] = v.ObjectID
 		i++
 	}
-	users, _ := user.GetUsers(ids)
+	users, err := user.GetUsers(ids)
+	if err != nil {
+		return nil, NewAppError(err)
+	}
 
 	userResponse := make([]UserResponse, len(users))
 	for _, v := range users {

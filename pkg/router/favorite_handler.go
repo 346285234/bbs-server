@@ -2,10 +2,11 @@ package router
 
 import (
 	"encoding/json"
-	"github.com/346285234/bbs-server/pkg/bbs"
-	"github.com/346285234/bbs-server/pkg/user"
 	"net/http"
 	"strconv"
+
+	"github.com/346285234/bbs-server/pkg/bbs"
+	"github.com/346285234/bbs-server/pkg/user"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -74,7 +75,10 @@ func (f *FavoriteHanlder) FavoriteUsers(w http.ResponseWriter, r *http.Request, 
 		ids[0] = v.UserID
 		i++
 	}
-	users, _ := user.GetUsers(ids)
+	users, err := user.GetUsers(ids)
+	if err != nil {
+		return nil, NewAppError(err)
+	}
 
 	userResponse := make([]UserResponse, len(users))
 	for _, v := range users {

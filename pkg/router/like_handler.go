@@ -2,10 +2,11 @@ package router
 
 import (
 	"encoding/json"
-	"github.com/346285234/bbs-server/pkg/bbs"
-	"github.com/346285234/bbs-server/pkg/user"
 	"net/http"
 	"strconv"
+
+	"github.com/346285234/bbs-server/pkg/bbs"
+	"github.com/346285234/bbs-server/pkg/user"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -124,7 +125,10 @@ func (l *LikeHandler) likeTopicUsers(w http.ResponseWriter, r *http.Request, p h
 		ids[i] = v.UserID
 		i++
 	}
-	users, _ := user.GetUsers(ids)
+	users, err := user.GetUsers(ids)
+	if err != nil {
+		return nil, NewAppError(err)
+	}
 
 	userResponse := make([]UserResponse, len(users))
 	for _, v := range users {
@@ -151,7 +155,10 @@ func (l *LikeHandler) likeCommentUsers(w http.ResponseWriter, r *http.Request, p
 		ids[i] = v.UserID
 		i++
 	}
-	users, _ := user.GetUsers(ids)
+	users, err := user.GetUsers(ids)
+	if err != nil {
+		return nil, NewAppError(err)
+	}
 
 	userResponse := make([]UserResponse, len(users))
 	for _, v := range users {

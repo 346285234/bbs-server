@@ -2,11 +2,12 @@ package router
 
 import (
 	"encoding/json"
-	"github.com/346285234/bbs-server/pkg/bbs"
-	"github.com/346285234/bbs-server/pkg/user"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/346285234/bbs-server/pkg/bbs"
+	"github.com/346285234/bbs-server/pkg/user"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -75,7 +76,10 @@ func (c *CommentHandler) List(w http.ResponseWriter, r *http.Request, p httprout
 		i++
 	}
 
-	users, _ := user.GetUsers(ids)
+	users, err := user.GetUsers(ids)
+	if err != nil {
+		return nil, NewAppError(err)
+	}
 	for i, v := range ids {
 		userMap[v] = &users[i]
 	}
